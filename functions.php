@@ -16,10 +16,6 @@
 	======================================================================================================================== */
 
 
-	if(function_exists('register_field')) {
-     register_field('acf_time_picker', dirname(__File__) . '/acf_time_picker/acf_time_picker.php');
-   }
-
 	require_once( 'external/starkers-utilities.php' );
 
 	
@@ -77,10 +73,6 @@
 
 		wp_register_script( 'site', get_template_directory_uri().'/js/site.js', array( 'jquery' ) );
 		wp_enqueue_script( 'site' );
-
-		wp_register_script( 'clock', get_template_directory_uri().'/js/date-se-SE.js', array( 'jquery' ) );
-		wp_enqueue_script( 'clock' );
-
 
 		wp_register_style( 'screen', get_template_directory_uri().'/style.css', '', '', 'screen' );
         wp_enqueue_style( 'screen' );
@@ -191,9 +183,9 @@
 
 	}
 
-	add_action( 'init', 'create_finspang_cms_post_types' );
+	add_action( 'init', 'create_slide_cms_post_types' );
 
-function create_finspang_cms_post_types() {
+function create_slide_cms_post_types() {
 	register_post_type( 'slide',
 		array(
 			'labels' => array(
@@ -218,31 +210,55 @@ function create_finspang_cms_post_types() {
 			'rewrite' => array( 'slug' => 'slide', 'with_front' => true )
 		)
 	);
+	register_post_type( 'slide_settings',
+		array(
+			'labels' => array(
+			'name' => __( 'Inställningssidor' ),
+			'singular_name' => __( 'Inställningssida' ),
+			'add_new' => __( 'Lägg till ny' ),
+			'add_new_item' => __( 'Lägg till ny inställningssida' ),
+			'edit' => __( 'Ändra' ),
+			'edit_item' => __( 'Ändra inställningssida' ),
+			'new_item' => __( 'Ny inställningssida' ),
+			'view' => __( 'Se inställningssida' ),
+			'view_item' => __( 'Se inställningssida' ),
+			'search_items' => __( 'Sök inställningssidor' ),
+			'not_found' => __( 'Inga inställningssidor hittades' ),
+			'not_found_in_trash' => __( 'Inga inställningssidor i papperskorgen' ),
+			'parent' => __( 'Förälder till inställningssida' ),
+			),
+			'public' => true,
+			'query_var' => true,
+			'has_archive' => true,
+			//'rewrite' => false 
+			'rewrite' => array( 'slug' => 'settings', 'with_front' => true )
+		)
+	);
 
 	// Add new taxonomy, NOT hierarchical (like tags)
-  $labels = array(
-    'name' => _x( 'Plats för monitor', 'taxonomy general name' ),
-    'singular_name' => _x( 'Plats för monitor', 'taxonomy singular name' ),
-    'search_items' =>  __( 'Sök efter platser' ),
-    'popular_items' => __( 'Populära platser för monitorer' ),
-    'all_items' => __( 'Alla monitorplatser' ),
-    'parent_item' => __( 'Förälder monitor plats' ),
-    'parent_item_colon' => __( 'Förälder monitor plats:' ),
-    'edit_item' => __( 'Ändra monitor plats' ), 
-    'update_item' => __( 'Uppdatera monitor plats' ),
-    'add_new_item' => __( 'Lägg till monitor plats' ),
-    'new_item_name' => __( 'Ny monitor plats' ),
-    'menu_name' => __( 'Platser för monitorer' ),
-  ); 
+	$labels = array(
+		'name' => _x( 'Plats för skärm', 'taxonomy general name' ),
+		'singular_name' => _x( 'Plats för skärm', 'taxonomy singular name' ),
+		'search_items' =>  __( 'Sök efter skärmar' ),
+		'popular_items' => __( 'Populära platser för skärmar' ),
+		'all_items' => __( 'Alla skärmar' ),
+		'parent_item' => __( 'Förälder skärm' ),
+		'parent_item_colon' => __( 'Förälder skärm:' ),
+		'edit_item' => __( 'Ändra skärm' ), 
+		'update_item' => __( 'Uppdatera skärm' ),
+		'add_new_item' => __( 'Lägg till skärm' ),
+		'new_item_name' => __( 'Ny skärm' ),
+		'menu_name' => __( 'Platser skärm' ),
+	); 
 
-  register_taxonomy('place','slide',array(
-    'hierarchical' => true,
-    'labels' => $labels,
-    'show_ui' => true,
-    'update_count_callback' => '_update_post_term_count',
-    'query_var' => true,
-    'rewrite' => array( 'slug' => 'platser' ),
-  ));
+	register_taxonomy('place',array('slide','slide_settings'),array(
+		'hierarchical' => true,
+		'labels' => $labels,
+		'show_ui' => true,
+		'update_count_callback' => '_update_post_term_count',
+		'query_var' => true,
+		'rewrite' => array( 'slug' => 'platser' ),
+	));
 
 	}
 
@@ -252,10 +268,10 @@ function my_edit_slide_columns( $columns ) {
 
   $columns = array(
     'cb' => '<input type="checkbox" />',
-    'title' => __( 'Betäckning' ),
-    'place' => __( 'Plats för monitor' ),
-    'from' => __('Visas från och med'),
-    'to' => __('Visas till och med'),
+    'title' => __( 'Namn' ),
+    'place' => __( 'Skärm' ),
+    'from' => __('Visas från'),
+    'to' => __('Visas till'),
     'date' => __( 'Date' )
   );
 
@@ -286,49 +302,25 @@ function my_manage_slide_columns( $column, $post_id ) {
     /* If displaying the 'raanr' column. */
     case 'from' :
 
-      /* Get the post meta. */
-	  $from = "";
-
-	  if($schedule_mode == "time_of_day_interval")
-	  {
-	  	$from = get_post_meta( $post_id, 'from_time_of_day', true );
-	  }
-	  else 
-	  {
+		/* Get the post meta. */
 	  	$from = get_post_meta( $post_id, 'from', true );
-	  }
+		
+		if ( empty( $from ) )
+			echo __( '-' );
+		else
+			echo Date("Y-m-d H:i",$from);
+		break;
 
-      /* If no duration is found, output a default message. */
-      if ( empty( $from ) || $schedule_mode == "no" || $schedule_mode == "to"  )
-        echo __( '-' );
-      /* If there is a duration, append 'minutes' to the text string. */
-      else
-        echo $from;
-      break;
+	case 'to' :
 
-      case 'to' :
+		$to = get_post_meta( $post_id, 'to', true );
+	  
+		if ( empty( $to ) )
+			echo __( '-' );
+		else
+			echo Date("Y-m-d H:i",$to);
 
-      $to = "";
-
-	  if($schedule_mode == "time_of_day_interval")
-	  {
-	  	$to = get_post_meta( $post_id, 'to_time_of_day', true );
-	  }
-	  else 
-	  {
-	  	$to = get_post_meta( $post_id, 'to', true );
-	  }
-
-
-      /* If no duration is found, output a default message. */
-      if ( empty( $to ) || $schedule_mode == "no" || $schedule_mode == "from"  )
-        echo __( '-' );
-
-      /* If there is a duration, append 'minutes' to the text string. */
-      else
-        echo $to;
-
-      break;
+		break;
 
 
       /* If displaying the 'place' column. */
@@ -377,87 +369,20 @@ function my_slide_sortable_columns( $columns ) {
   return $columns;
 }
 
-function add_single_slide($post_id,$to,$from)
-{
-	$slide = "";
-
-	$slide_duraction = get_field('slide_duraction',$post_id);
-
-	$slide_content = get_field('slide_content',$post_id);
-
-	$slide_image_mode = get_field('slide_image_mode',$post_id);
-
-	$slide_image =  get_field('slide_image',$post_id);
-
-	$slide_image_size_name = get_image_size_name($slide_image,$slide_image_mode);
-
-	$slide_content_position_class = get_content_position_class_name($slide_image_size_name,$slide_image_mode);
-	$slide_container_class = get_container_class($slide_image_size_name,$slide_image_mode);
-
-	$slide .=  '<div class="slider-item'.$slide_container_class.'">';
-	$slide .=  '<input type="hidden" name="slide_duraction" value="'.$slide_duraction.'"/>';
-	$slide .=  extract_image_tag($slide_image,$slide_image_mode, $slide_image_size_name);
-	$slide .=  '<div class="slider_text'.$slide_content_position_class.'">'.$slide_content.'</div>';
-	$slide .=  '<input type="hidden" name="slide_show_from" value="'.$from.'"/>';
-	$slide .=  '<input type="hidden" name="slide_show_to" value="'.$to.'"/>';
-	$slide .=  '</div>';
-
-	return $slide;
-}
-
-function add_multiple_slides($post_id,$to,$from)
-{
-
-	$slides = "";
-
-	$rows = get_field('slides',$post_id);
-
-	if($rows)
-		{
-
-			foreach($rows as $row)
-			{
-				$page_slide_duraction = $row['page_slide_duraction'];
-
-				$page_slide_content = $row['page_slide_content'];
-
-				$page_slide_image_mode = $row['page_slide_image_mode'];
-
-				$page_slide_image =  $row['page_slide_image'];
-
-				$page_slide_image_size_name = get_image_size_name($page_slide_image,$page_slide_image_mode);
-
-				$page_slide_content_position_class = get_content_position_class_name($page_slide_image_size_name,$page_slide_image_mode);
-				$page_slide_container_class =  get_container_class($page_slide_image_size_name,$page_slide_image_mode);
-	
-				$slides .= '<div class="slider-item'.$page_slide_container_class.'">';
-				$slides .=  '<input type="hidden" name="slide_duraction" value="'.$page_slide_duraction.'"/>';
-				$slides .=  extract_image_tag($page_slide_image,$page_slide_image_mode, $page_slide_image_size_name);
-				$slides .=  '<div class="slider_text'.$page_slide_content_position_class.'">'.$page_slide_content.'</div>';
-				$slides .=  '<input type="hidden" name="slide_show_from" value="'.$from.'"/>';
-				$slides .=  '<input type="hidden" name="slide_show_to" value="'.$to.'"/>';
-				$slides .=  '</div>';
-			}
-		 
-		}
-
-	return $slides;
-}
 
 function is_time24($val) 
 { 
 	return (bool)preg_match("/^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?$/", $val); 
 } 
 
-function extract_image_tag($image_data,$image_mode,$image_size_name)
+function extract_image_tag($image_data,$image_mode)
 {
+	$image_size_name = get_image_size_name($image_data,$image_mode);
 	$image_tag = "";
-	$image_class = get_image_class_name($image_size_name,$image_mode);
 
-	
 	if($image_data != null)
 	{
-		$image_tag = '<img class="slide_image'.$image_class.'" alt="'.$image_data['alt'].'" src="'.$image_data['sizes'][$image_size_name].'" />';
+		$image_tag = "<img class='slide_image $image_mode' alt='".$image_data['alt']."' src='".$image_data['sizes'][$image_size_name]."' />";
 	}
 
 	return $image_tag;
@@ -467,19 +392,18 @@ function extract_image_tag($image_data,$image_mode,$image_size_name)
 function get_image_size_name($image_data, $image_mode)
 {
 	$image_size_name = "thumbnail";
-
 	switch ($image_mode) {
 		case 'normal-left':
-			$image_size_name = "medium";
+			$image_size_name = "large";
 			break;
 		case 'normal-right':
-			$image_size_name = "medium";
+			$image_size_name = "large";
 			break;
 		case 'half-left':
-			$image_size_name = "whole";
+			$image_size_name = "half";
 			break;
 		case 'half-right':
-			$image_size_name = "whole";
+			$image_size_name = "half";
 			break;
 		case 'whole':
 			$image_size_name = "whole";
@@ -508,107 +432,16 @@ function get_image_size_name($image_data, $image_mode)
 	{
 		$image_size_name = "orginal";
 	}
-
+	if($image_data['sizes'][$image_size_name] == null)
+	{
+		$image_size_name = "empty";
+	}
 	return $image_size_name;
-}
-
-
-function get_image_class_name($modfied_image_size_name,$image_mode)
-{
-	$image_class_name = "";
-
-	if($modfied_image_size_name == "whole")
-	{
-		$image_class_name =" bg";
-	}
-	
-	if(strstr($image_mode, 'left'))
-	{
-		$image_class_name .=" image_to_the_left";
-	}
-	else if(strstr($image_mode, 'right'))
-	{
-		$image_class_name .=" image_to_the_right";
-	}
-
-
-	return $image_class_name;
-
-}
-
-function get_container_class($modfied_image_size_name,$image_mode)
-{
-	$class_name = "";
-
-	if($image_mode != "half-left" && $image_mode != "half-right")
-	{
-		$class_name = " padded";
-	}
-
-	return $class_name;
-
-}
-
-function get_content_position_class_name($modfied_image_size_name,$image_mode)
-{
-	$content_position_class_name = "";
-
-	if($modfied_image_size_name == "whole" && $image_mode == "half-left")
-	{
-		$content_position_class_name = " text_to_the_right";
-	}
-	else if($modfied_image_size_name == "whole" && $image_mode == "half-right")
-	{
-		$content_position_class_name  =" text_to_the_left";
-	}
-
-
-	return $content_position_class_name;
-}
-
-function add_style_block_if_there_is_settings()
-{
-	$footer_background_color =  get_field('footer_background_color', 'options');
-	$footer_text_color = get_field('footer_text_color', 'options');
-
-	$header_logo = get_field('header_logo', 'options');
-
-	$style = "";
-
-	if($header_logo != "" || $footer_text_color != "" ||  $footer_background_color != "")
-	{
-		echo '<style type="text/css">';
-	}
-
-	if($header_logo != "")
-	{
-		echo "body {background-image: url('".$header_logo["url"]."') !important;}";
-	}
-
-	if($footer_text_color != "")
-	{
-		echo "#slide-footer {color: ".$footer_text_color." !important;}";
-	}
-
-	if($footer_background_color != "")
-	{
-		echo "#slide-footer {background-color: ".$footer_background_color." !important;}";
-	}
-
-	if($header_logo != "" || $footer_text_color != "" ||  $footer_background_color != "")
-	{
-		echo "</style>";
-	}
 }
 
 	function edit_admin_menus() {  
 	    global $menu;  
 	    global $submenu;  
-	    /*$menu[5][0] = 'Recipes'; // Change Posts to Recipes  
-	    $submenu['edit.php'][5][0] = 'All Recipes';  
-	    $submenu['edit.php'][10][0] = 'Add a Recipe';  
-	    $submenu['edit.php'][15][0] = 'Meal Types'; // Rename categories to meal types  
-	    $submenu['edit.php'][16][0] = 'Ingredients'; // Rename tags to ingredients  */
 	    
 		remove_menu_page('edit.php'); // Remove the post menu
 		remove_menu_page('link-manager.php'); // Remove the link manager menu
@@ -620,26 +453,29 @@ function add_style_block_if_there_is_settings()
 	add_action( 'admin_menu', 'edit_admin_menus' );  
 
 	function custom_menu_order($menu_ord) {  
-    if (!$menu_ord) return true;  
-    return array(  
-        'index.php', // Dashboard  
-        'separator1', // First separator  
-        'edit.php?post_type=slide',
-        'edit.php', // Posts  
-        'upload.php', // Media  
-        'link-manager.php', // Links  
-        'edit.php?post_type=page', // Pages  
-        'edit-comments.php', // Comments  
-        'separator2', // Third separator 
-        'themes.php', // Appearance
-        
-        'plugins.php', // Plugins  
-        'users.php', // Users  
-        'tools.php', // Tools  
-        'options-general.php', // Settings  
-        'separator-last', // Last separator  
-    );  
-} 
-add_filter('custom_menu_order', 'custom_menu_order'); // Activate custom_menu_order  
-add_filter('menu_order', 'custom_menu_order');
-add_image_size( 'whole',1920,1080,true ); // Full size
+		if (!$menu_ord) return true;  
+		return array(  
+			'index.php', // Dashboard  
+			'separator1', // First separator  
+			'edit.php?post_type=slide',
+			'edit.php?post_type=slide_settings',
+			'edit.php', // Posts  
+			'upload.php', // Media  
+			'link-manager.php', // Links  
+			'edit.php?post_type=page', // Pages  
+			'edit-comments.php', // Comments  
+			'separator2', // Third separator 
+			'themes.php', // Appearance
+			
+			'plugins.php', // Plugins  
+			'users.php', // Users  
+			'tools.php', // Tools  
+			'options-general.php', // Settings  
+			'separator-last', // Last separator  
+		);  
+	} 
+	add_filter('custom_menu_order', 'custom_menu_order'); // Activate custom_menu_order  
+	add_filter('menu_order', 'custom_menu_order');
+	
+	add_image_size( 'half',960,1080,true ); // Half size
+	add_image_size( 'whole',1920,1080,true ); // Full size

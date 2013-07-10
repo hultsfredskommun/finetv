@@ -1,276 +1,167 @@
+(function($) {
 
-	jQuery(document).ready(function($){
-
-		if($('div#datetime-panel').length > 0)
-		{
-			startTime();
-		}
-
+	var active_slide = 1;
+	var slide_count = 0;
+	var update_count = 0;
+	var blank_screen_from = "";
+	var blank_screen_to = "";
+	var slide_t, update_t;
+	$(document).ready(function(){
 		
-
-		// Your JavaScript goes here
-		function startTime()
-		{
-
-			var today = new Date();
-			var year = today.getFullYear();
-			var month = today.getMonth()+1;
-			var day = today.getDate();
-
-			var hour=today.getHours();
-			var minute=today.getMinutes();
-
-			// add a zero in front of numbers < 10
-			hour = checkTime(hour);
-			minute=checkTime(minute);
-
-			month=checkTime(month);
-			day=checkTime(day);
-
-
-			$('#datetime-panel').text(year+"-"+month+"-"+day+" "+hour+":"+minute);
+		set_settings();
+		
+		if ($("#source").length > 0) {
+			/* HANDLE SLIDESHOW */
+			do_slide();
 			
-			t=setTimeout(function(){startTime()},500);
+			/* UPDATE SLIDES FROM SERVER */
+			do_update();
+
 		}
-		function checkTime(i)
+		else {
+			// just fix some js styling
+			fix_js_styling();
+		}
+	});
+
+	function do_slide() {
+		slide_count++;
+		slide = $("#source .item-" + active_slide);
+		now_time = TimeString(new Date());
+		
+		// do blank
+		if (blank_screen_from < now_time && blank_screen_to > now_time)
 		{
-			if (i<10)
-			  {
-			  i="0" + i;
-			  }
-			return i;
+			if ($("#black").hasClass("hidden"))
+				$("#black").removeClass("hidden");
 		}
-
+		else // remove blank
+		{
+			if (!$("#black").hasClass("hidden"))
+				$("#black").addClass("hidden");
+		}
 		
-
-		$('#slider').fullSlider();
-
-		
-
-});
-
-
-(function($){
-	$.fn.fullSlider = function(){
-		return this.each(function(){
-
-
-
-			function getSliderItem($source)
-			{
-				$slides = $source.find('> div');
-
-				//console.log($slides.length);
-
-				if($slides.length == 1)
-				{
-					// Refresh the page sometimes to account for new code...
-					if(refreshCounter > 60)
-					{
-						$('body').fadeOut(1000,function(){
-							location.reload();
-						});
-						
-					}else {
-
-						
-
-				
-						// Do a hit
-						$.get(document.URL, function(data) {
-
-						  $(data).find('div#'+container_id+' > div').each(function(){
-						  	
-						  	$(this).appendTo($source);
-
-						  });
-						  
-						}).error(function() { 
-							
-							$fallback_source.find('> div').each(function(){
-							$(this).appendTo($source);
-						});
-
-						});
-					}
-
-				} 
-				else if($slides.length == 0) // If ther is some error
-				{
-					// Refresh the page to try to avoid a error loop... 
-					if(refreshCounter > 3)
-					{
-						//location.reload();
-					}
-
-					refreshCounter++;
-					return false;
-				}
-
-				refreshCounter++;
-
-				//Grab the first item and remove it from the source
-
-				$slide_object = $slides.filter(':first').appendTo($fallback_source);
-				$fallback_source.filter(':first').remove();
-
-				return $slide_object;
+		// check if slides
+		if (slide.length < 1) {
+			if (active_slide == 1) { 
+				clearTimeout(slide_t);
+				slide_t=setTimeout(do_slide,10000); // wait 10s and try again
+				$("#slide").html("Error, no slides. " + slide_count + " time.");
+				return;
 			}
-
-			// 1. setup
-
-				// Capture a cache of all div the elements in the slider container
-				
-
-				var $container = $(this);
-				var container_id = $(this).attr("id");
-
-				/*slides = [],
-				currentItem = 1,
-				total = 0;*/
-
-				var refreshCounter = 0;
-
-				var $source = $('<div id="source" />').hide().appendTo('body');
-
-				var $fallback_source = $('<div id="fallback_source" />').hide().appendTo('body');
-
-				$('<div id="transition_element" />').appendTo('body');
-
+			active_slide = 1;		
+			slide = $("#source .item-" + active_slide);
+		}
+		
+		// add new active slide
+		if (slide.length >= 1) {
+			$("#slide").html($(slide).html());
+			fix_js_styling();
+		}
+		else
+			$("#slide").html("Error, still no slide.");
+		
+		slide_duration = $("#slide .slide_duration").html() * 1000;
+		if (isNaN(slide_duration) || slide_duration == 0)
+			slide_duration = 10000;
 			
-
-				// Capture the cache 
-				// TODO: Create ofline slides to, have incase the internet conection fails...
-/*
-				$container.find('> div').each(function(){
-					slides.push('<div class="slider-item">'+$(this).html()+'</div>');
-				});
-
-				total = slides.length;*/
-
-				//console.log(slides);
-
-				// Comp the list down to one
-
-				$container.find('> div').clone().appendTo($fallback_source);
-				$container.find('> div').filter(':gt(0)').appendTo($source);
-
-
-				$(window).resize(function() {
-					var height = parseInt($(window).innerHeight())-30;
-  					$container.css("height",height);
-  					$container.find('> div:visible').vAlign();
-				});
-
-
-				
-
-				setTimeout(function()
-					{
-						$(window).resize();
-					}, 10);
-
-				$container.find('> div').first().vAlign();
-				
-				
-			
-				
-				
-				
-
-				//2. effect
-
-				function cyckle()
-				{
-
-					var $item = getSliderItem($source);
-
-					var duraction = "3000";
-
-					if($item != false)
-					{
-						// insert a new item with opacity and height of zero
-						var $insert = $item.prependTo($container).hide();
-
-						// Get the settings for the slide...
-						var slide_settings = extract_slide_settings($insert);
-
-
-						// fade the last item out
-						/*$container.find('> div:last').fadeOut(1000,function(){
-							// increase the height of the NEW first item
-							$insert.fadeIn(1000);
-							// AND at the same time - decrease the height of the LAST item
-							
-							// finally fade the first item in (and remove the last)
-							$(this).remove();
-						});*/
-						
-
-						
-						$('div#transition_element').transition({backgroundColor : '#fff'}, function() {
-    						$container.find('> div:last').remove();
-    						$insert.show().vAlign();
-							$('div#transition_element').transition({backgroundColor : 'transparent'});
-						});
-
-						// Get the duraction of the slide
-						duraction = slide_settings.duraction;
-					}
-					
-					setTimeout(cyckle, duraction);
-					
+		// debug info
+		$("#debug .slide").html("slide_duration: " + slide_duration + "<br>" +
+		"slide_count: " + slide_count + "<br>" +
+		"active_slide: " + active_slide + "<br>" +
+		"now: " + now_time + "<br>" +
+		"blank_screen_from: " + blank_screen_from + "<br>" +
+		"blank_screen_to: " + blank_screen_to + "<br>"
+		);
+		
+		// wait for next slide
+		active_slide++;
+		clearTimeout(slide_t);
+		slide_t=setTimeout(do_slide,slide_duration);
+	
+	}
+	
+	function do_update() {
+		update_count++;
+		
+		// Get new slide-items
+		$.get(document.URL, function(data) {
+			newsource = $(data);
+			newcount = 0;
+			if (newsource.find(".slide-item").length > 0) {
+				// do hard refresh every hour
+				if (update_count > 60) {
+					location.reload();
 				}
-				// Prepare the first slide, for the slider, so the first slide  has duraction...
-				var first_slide = $container.find('> div:first');
-				var slide_settings = extract_slide_settings(first_slide);
-				setTimeout(cyckle, slide_settings.duraction);				
+				$("#source").html("Uppdaterad " + Date());
+				newsource.find(".slide-item").each(function() {
+					newcount++;
+					$("#source").append($(this));
+				});
+				active_slide = 1;
+
+				// set new settings
+				set_settings();
+				
+			}
+				
+			$("#debug .update").html("update_count: " + update_count + "<br>slide-items: " + (newcount - 1) + "<br>Updated " + DateString(new Date()));
+			
+
+		  
+		}).error(function() { 
+			$("#debug .update").html("Error fetching data. Try again.");
+			clearTimeout(update_t);
+			update_t=setTimeout(do_update,60000);
+			
 		});
 
 		
-
-
+		$("#debug .update").html("update_count: " + update_count + "<br>"
+		);
 		
-		function extract_slide_settings(slider_element)
-		{
+		clearTimeout(update_t);
+		update_t=setTimeout(do_update,60000);
+	
+	}
 
-			var duraction = $(slider_element).find('input[name="slide_duraction"]').val() * 1000;
+	
+	
+	function fix_js_styling() {
+		if ($("#slide").height() > $("#slide .slide_image").height())
+			$("#slide .slide_image").css("margin-top", ($("#slide").height() - $("#slide .slide_image").height()) / 2 + "px");
+		$("#slide .content").css("margin-top", ($("#slide").height() - $("#slide .content").height()) / 2 + "px");
+	}
+	
+	
+	function set_settings() {
+		$("#header_logo").toggle(($("#source .settings .header_logo").html() != ""));
+		$("#header_logo").attr("href",$("#source .settings .header_logo").html());
+		
+		$("#footer").toggle(($("#source .settings .footer_text").html() != ""));
+		$("#footer .padding").html($("#source .settings .footer_text").html());
+		
+		$("#footer").css("background-color", $("#source .settings .footer_background_color").html());
+		$("#footer").css("color", $("#source .settings .footer_text_color").html());
+		blank_screen_from = $("#source .settings .blank_screen_from").html();
+		blank_screen_to = $("#source .settings .blank_screen_to").html();
+		$("body").css("font-size", $("#source .settings .screen_font_scale").html() + "%");
+	}				
+	
+	function DateString(d){
+		function pad(n){return n<10 ? '0'+n : n}
+		return d.getUTCFullYear()+'-'
+			  + pad(d.getUTCMonth()+1)+'-'
+			  + pad(d.getUTCDate())+' '
+			  + pad(d.getUTCHours())+':'
+			  + pad(d.getUTCMinutes());
 
-			if(duraction <= 0 || duraction == undefined || duraction == "")
-			{
-				duraction = 10;
-			}
+	}
+	function TimeString(d){
+		function pad(n){return n<10 ? '0'+n : n}
+		return pad(d.getUTCHours())+':'
+			  + pad(d.getUTCMinutes());
 
-			var to = $(slider_element).find('input[name="slide_show_to"]').val();
-			var from =  $(slider_element).find('input[name="slide_show_from"]').val();
-
-			var slide_settings = new Object();
-			
-			slide_settings.duraction = duraction;
-			slide_settings.to = to;
-			slide_settings.from = from;
-
-			return slide_settings;
-
-		}
-
-		function pausecomp(ms) {
-			ms += new Date().getTime();
-			while (new Date() < ms){}
-		}
-
-
-
-	};
+	}
 })(jQuery);
 
-(function($){
-	$.fn.vAlign = function(){
-    return this.each(function(i){
-    var ah = $(this).height();
-    var ph = $(this).parent().height();
-    var mh = Math.ceil((ph-ah) / 2);
-    $(this).css('margin-top', mh);
-    });
-};
-})(jQuery);

@@ -14,63 +14,46 @@
  * @since 		Starkers 4.0
  */
 ?>
-<?php get_template_parts( array( 'parts/shared/html-header', 'parts/shared/slide-header' ) ); ?>
+<?php get_header(); ?>
 
-<div id="primary">
-<form>
-<div id="slider">
-<?php if ( have_posts() ) while ( have_posts() ) : the_post(); ?>
-<!--h2><?php  //the_title(); ?></h2-->
-<?php// the_content(); ?>
+<div id="black" class="hidden">as</div>
+<div id="debug"><div class="slide"></div><div class="update"></div></div>
+<div id="slide"></div>
+<div id="source" class="hidden">
 
-
+<div class="settings slide-item">
 <?php
+	/* get settings depending on place */
+	$wpq = array (post_type =>'slide_settings','taxonomy'=>'place','term'=>$place);
+	$myquery = new WP_Query ($wpq);
+	if ( $myquery->have_posts()) : $myquery->the_post();
+		$header_logo = get_field('header_logo');
+		$footer_text = get_field("footer_text");
+		$footer_background_color =  get_field('footer_background_color');
+		$footer_text_color = get_field('footer_text_color');
+		$blank_screen_from = get_field('blank_screen_from');
+		$blank_screen_to = get_field('blank_screen_to');
+		$screen_font_scale = get_field('screen_font_scale');
+	endif; 
+	wp_reset_query();
+?>
+	<div class="header_logo"><?php echo $header_logo; ?></div>
+	<div class="footer_text"><?php echo $footer_text; ?></div>
+	<div class="footer_background_color"><?php echo $footer_background_color; ?></div>
+	<div class="footer_text_color"><?php echo $footer_text_color; ?></div>
+	<div class="blank_screen_from"><?php echo $blank_screen_from; ?></div>
+	<div class="blank_screen_to"><?php echo $blank_screen_to; ?></div>
+	<div class="screen_font_scale"><?php echo $screen_font_scale; ?></div>
 	
-		 $post_id = $post->ID;
+</div>
 
-		
-		 $time_mode = get_field('time_settings_choise',$post_id);
+<?php /* get slides depending on place */ ?>
+<?php $global_count = 1; ?>
+<?php $mainquery = new WP_query(array (post_type =>'slide','taxonomy'=>'place','term'=>$place)); ?>
 
-
-		 $from = "";
-		 $to = "";
-
-
-
-		if($time_mode == "time_of_day_interval")
-		{
-			$to = get_post_meta( $post_id, 'to_time_of_day', true );
-			$from = get_post_meta( $post_id, 'from_time_of_day', true );
-		}
-		else 
-		{
-			$from = get_field('from',$post_id);
-			$to = get_field('to',$post_id);
-		}
-
-		
-		if(!isValidTime($to,$from) && $time_mode != "no")
-		{
-			continue;
-		}
-		
-		$mode = get_field('type_of_slide',$post_id);
-
-		
-		if($mode == 'group')
-		{
-			echo add_multiple_slides($post_id,$to,$from);
-		}
-		else if($mode == 'normal')
-		{
-			echo add_single_slide($post_id,$to,$from);
-		}
-		?>
-
-
+<?php if ( $mainquery->have_posts() ) while ( $mainquery->have_posts() ) : $mainquery->the_post(); ?>
+<?php include("slide-content.php"); ?>
 <?php //comments_template( '', true ); ?>
 <?php endwhile; ?>
 </div>
-</form>
-</div>
-<?php get_template_parts( array( 'parts/shared/slide-footer','parts/shared/html-footer' ) ); ?>
+<?php get_footer(); ?>

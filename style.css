@@ -1,10 +1,10 @@
 /*
-Theme Name: 	Finetv
-Theme URI: 		http://www.finspang.se
-Description: 	Finetv for presenting slides on a monitor
-Version: 		4.0
-Author: 		Johan Furuskog
-Author URI: 	http://www.furuskog.se
+Theme Name: 	Infotv
+Theme URI: 		http://www.hultsfred.se
+Description: 	Infotv for presenting slides on a monitor (based on a finetv made by Johan Furuskog @furuskog)
+Version: 		0.1
+Author: 		Jonas Hjalmarsson
+Author URI: 	http://www.hultsfred.se
 Tags: 			TV, information, slides, clean, basic
 */
 
@@ -65,265 +65,108 @@ h4,
 h5, 
 h6 					{ font-weight:bold; /* This helps to identify headings at the initial build stage, but you should write something more precise later on */ }
 
-/* ---------------------------------------------------------------------------------------------------------- 
-03 Media queries (using a mobile-first approach) ------------------------------------------------------------
----------------------------------------------------------------------------------------------------------- */
-
-/* 400 and up */
-@media screen and (min-width:400px) {
-
-					{ /* Place your styles here for all widths greater than 400px */ }
-
-}
-
-/* Retina Display */
-@media screen and (-webkit-min-device-pixel-ratio:2) {
-
-					{ /* Place your styles here for all 'Retina' screens */ }
-
-}
-/* Slides */	
-body 
-{
-	overflow: none !important;
-	width:100%;
-	font-family: verdana;
-}
-
-* {overflow: none !!important; overflow-y: none !important; overflow-x:hidden !important; 
-overflow-y:hidden !important;}*/
-**::-webkit-scrollbar {display: none !important;}
-
-
-div#wpadminbar * {overflow: visible !important; overflow-y: visible !important; overflow-x:visible!important; overflow-y:visible !important;}
-
-div#header h1 a,div#header h1 a:link ,div#header h1 a:visited, div#header h1 a:active 
-{
-	font-family: verdana;
-	font-size: 2.25em;
-	color:#d10a10;
-	text-decoration: none;
-}
-
-div#slide-header
-{
-	background: url('images/finspang-shield.png') no-repeat 10px -8px transparent;
-	z-index: 20;
-	position: absolute;
-	top:0;
-	left:0;
-	height:200px;
-	margin:0;
-	display:block;
-	width:100%;
-}
-
-#slider{ width: 100%; margin: 0 25px 0 25px;}
-
-header h1 a:hover
-{
-	text-decoration: underline;
-}
-
-#primary,#slide-header,#header,#footer
-{
-	max-width: 50.0em;      /* 800px / 16px = 61.75em */
-	
-}
-
-
-
-#primary,#header,#footer{
-	margin:225px auto 20px auto;
-}
-
-.tax-place div#primary
-{
-	max-width: 100%;
-	margin-top:0;
-}
-
-#header
-{
-	margin-top:185px;
-}
-
-#footer,body.home #primary
-{
-	margin-top:10px;
-}
-
-#footer
-{
-	margin-bottom: 0px;
-}
-
-#primary h1
-{
-	font-size: 3.0em;
-	margin:25px 0px;
-
-}
-
-#primary h2 
-{
-	font-size: 2.25em;
-	margin:15px 0px;
-}
-
-#primary p
-{
-	font-size: 2.0em;
-}
-
-
-#slide-footer
-{
-	position:absolute;
-	bottom: 0;
-	left:0;
-	z-index: 45;
-	background: #d10a10;
-	color:#fff;
-	text-align: right;
-	width: 100%;
-	display:block;
-}
-
-#slide-footer div
-{
-	margin:10px 0.625em 10px 0.625em;
-}
-
-div#datetime-panel
-{
-	position:absolute;
-	top: 0.625em;
-	right:0.625em;
-	border-radius: 5px;
-	background: #f1f1f1;
-	color: #555;
-	padding:5px 0.625em;
-	z-index:25;
-}
-
-div.slider-item 
-{
-	z-index:15;
-	display:block;
-
-}
-
-div.slider-item.padded 
-{
-	width:60%;
-	margin:0 auto 0 auto; 
-
-}
-
-
-div.slider-item img.slide_image
-{
-border: 0.375em solid white;
-margin: 0px 1.0em 0px 0px;
--moz-box-shadow: 0 0 0.5em #ccc;
--webkit-box-shadow: 0 0 0.5em#ccc;
-box-shadow: 0 0 0.5em #ccc;
-}
-
-div.slider-item img.slide_image.image_to_the_left
-{
-	float: left;
-	margin: 0px 1.0em 0px 0px;
-}
-div.slider-item img.slide_image.image_to_the_right
-{
+h1 { font-size: 500%;}
+h2 { font-size: 400%;}
+h3 { font-size: 300%;}
+h4 { font-size: 250%;}
+h5 { font-size: 200%;}
+.alignright {
 	float: right;
-	margin: 0px 0px 0px 1.0em;
 }
-
-
-img.bg {
-	/* Set rules to fill background */
-	min-height: 100%;
-	min-width: 64.0em;
-	-moz-box-shadow: none !important;
-	-webkit-box-shadow: none !important;
-	box-shadow: none !important;
-	float: none !important;
-	
-	/* Set up proportionate scaling */
-	width: 100%;
-	height: auto;
-	
-	/* Set up positioning */
+.alignleft {
+	float: left;
+}
+.hidden {
+	display: none;
+}
+.padding {
+	padding: 1em;
+}
+#black {
+	z-index: 999;
 	position: fixed;
 	top: 0;
 	left: 0;
-	border:none !important;
-	padding:0;
-	margin:0 !important;
-	z-index: 0;
+	height: 100%;
+	width: 100%;
+	background: black;
+	opacity: 0.8;
+}
+#debug {
+	z-index: 50;
+	position: fixed;
+	top: 2em;
+	right: 2em;
+	padding: 1em;
+	border-radius: 1em;
+	box-shadow: 1px 1px 5px #666;
+	background: white;
+	color: black;
+}
+#debug .update {
+	border-top: 1px solid gray;
+	padding-top: 1em;
+	margin-top: 1em;
+}
+#header {
+	z-index: 40;
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding: 1em;
+	margin: 0;
+}
+#slide {
+	z-index: 20;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+#footer {
+	z-index: 30;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+}
+#wpadminbar {
+	display: none;
 }
 
-
-
-img.bg.slide_image.image_to_the_left {
-		
-		left: -50%;
-		margin-right: -32.0em;   /* 50% */
-
-		
+/* whole image */
+.whole {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
 }
-img.bg.slide_image.image_to_the_right {
-		left: 50%;
-		margin-left: -32.0em;   /* 50% */
-}
-
-
-
-div.slider_text 
-{
-    display: block;
-    text-align: center;
-}
-
-div.slider_text.text_to_the_left
-{
-	display: block;
+/* normal and half image */
+.half-left, .half-right,
+.normal-left, .normal-right {
 	width: 50%;
 }
-
-div.slider_text.text_to_the_right
-{
-	width: 50%;
-	margin-left:50%;
-	display: block;
+.half-left,
+.normal-left {
+	float: left;
+}
+.half-right,
+.normal-right {
+	float: right;
 }
 
-div#transition_element
-{
-	position:relative;
-	top:0px;
-	bottom:0px;
-	left:0px;
-	right:0px;
-	z-index: 19;
+/* slide setup */
+.slide_image {
+	z-index: 10;	
 }
-
-@media screen and (max-width: 1024px) { 
-	#slider
-	{
-		/*height: 768px;*/
-	}
+.slide_text {
+	z-index: 11;
+	text-align: center;
 }
-
-@media screen and (max-width: 1920px) { 
-	#slider
-	{
-		/*height: 1080px;*/
-	}
-}
-
-
+/* ---------------------------------------------------------------------------------------------------------- 
+03 Media queries (using a mobile-first approach) ------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------- */
 

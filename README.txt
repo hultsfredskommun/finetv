@@ -1,8 +1,8 @@
 
 
-	FINETV
+	InfoTV
 
-	Created by Kommunalutveckling.
+	Created by Kommunalutveckling (Johan Furuskog and Jonas Hjalmarsson)
 
 
 	DESCRIPTION
@@ -10,8 +10,7 @@
 	- - - - - - - - - - - - - - - - - - - - - - -
 
 	A wordpress theme used to display fullscreen slides. You can show full screen images, half screen images (left, right), small images with borders (left, right).
-	Users can create multi paged slides. Categories are used to deside where the monitor is placed and there for you can have the slides on diffrent monitors just 
-	categorize them to all the monitor the slide need to be on.
+	Categories are used to deside where the monitor is placed, one or several places is up to the editor.
 
 	- - - - - - - - - - - - - - - - - - - - - - -
 
@@ -19,14 +18,8 @@
 
 	- - - - - - - - - - - - - - - - - - - - - - -
 
-	Advanced custom fields
+	Advanced custom fields - see more http://www.advancedcustomfields.com/
 
-	Repeater plugin for Advanced custom fields
-
-	Option plugin for Advanced custom fields
-
+	Advanced Custom Fields addon: Date and Time Picker by Per Soderling (with a manual bugfix https://github.com/bgcom/acf-field-date-time-picker/commit/96a88ffb660c2443bb5621e2fbde69639220227f)
+	
 	- - - - - - - - - - - - - - - - - - - - - - -
-
-	Enjoy!
-
-	~ Johan Furuskog

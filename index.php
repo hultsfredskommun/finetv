@@ -17,7 +17,7 @@
 <div id="primary">
 <?php
 		
-		 echo '<h2>Monitorer</h2>';
+		 echo '<h2>Tillgängliga skärmar</h2>';
 
 		 $terms = get_terms("place");
 		 $count = count($terms);
