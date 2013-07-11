@@ -16,8 +16,8 @@
 ?>
 <?php get_header(); ?>
 
-<div id="black" class="hidden">as</div>
-<div id="debug"><div class="slide"></div><div class="update"></div></div>
+<div id="black" class="hidden"></div>
+<div id="debug" class="hidden"><div class="slide"></div><div class="update"></div></div>
 <div id="slide"></div>
 <div id="source" class="hidden">
 

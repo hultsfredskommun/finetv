@@ -12,24 +12,28 @@
  * @subpackage 	Starkers
  * @since 		Starkers 4.0
  */
+	if ($_COOKIE["infotv_redirect"] != "" && !isset($_REQUEST["reset"])) {
+		$term_link = get_term_link($_COOKIE["infotv_redirect"], 'place' );
+		if (!is_wp_error($term_link))
+			wp_redirect( $term_link );
+		echo $term_link->get_error_message();
+	}
 ?>
-<?php get_template_parts( array( 'parts/shared/html-header', 'parts/shared/header' ) ); ?>
+<?php get_header(); ?>
 <div id="primary">
 <?php
-		
-		 echo '<h2>Tillgängliga skärmar</h2>';
+	echo "<b>Tillgängliga skärmar</b>";
 
-		 $terms = get_terms("place");
-		 $count = count($terms);
-		 if ( $count > 0 ){
-
-		     echo "<ul>";
-		     foreach ( $terms as $term ) {
-		       $url = get_term_link($term->slug, 'place');
-		       echo "<li><a href='$url' title='".$term->name."'>". $term->name . "</a> <a href='$url?client=" . $_SERVER['REMOTE_ADDR'] . "' title='".$term->name."'>remember me</a> </li>";
-		     }
-		     echo "</ul>";
-		 }
+	$terms = get_terms("place");
+	$count = count($terms);
+	if ( $count > 0 ){
+		echo "<ul>";
+		foreach ( $terms as $term ) {
+			$url = get_term_link($term->slug, 'place');
+			echo "<li><a href='$url?always' title='".$term->name."'>". $term->name . "</a></li>";
+		}
+		echo "</ul>";
+	}
 ?>
 </div>
-<?php get_template_parts( array( 'parts/shared/footer','parts/shared/html-footer') ); ?>
+<?php get_footer(); ?>
