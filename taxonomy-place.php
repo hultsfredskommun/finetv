@@ -34,6 +34,8 @@
 		$blank_screen_from = get_field('blank_screen_from');
 		$blank_screen_to = get_field('blank_screen_to');
 		$screen_font_scale = get_field('screen_font_scale');
+		$screen_background_color = get_field('screen_background_color');
+		$screen_text_color = get_field('screen_text_color');
 	endif; 
 	wp_reset_query();
 ?>
@@ -44,6 +46,8 @@
 	<div class="blank_screen_from"><?php echo $blank_screen_from; ?></div>
 	<div class="blank_screen_to"><?php echo $blank_screen_to; ?></div>
 	<div class="screen_font_scale"><?php echo $screen_font_scale; ?></div>
+	<div class="screen_background_color"><?php echo $screen_background_color; ?></div>
+	<div class="screen_text_color"><?php echo $screen_text_color; ?></div>
 	
 </div>
 

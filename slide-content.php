@@ -10,10 +10,14 @@
 	$slide_content = get_field('slide_content',$post_id);
 	$slide_image =  get_field('slide_image',$post_id);
 	$slide_image_mode =  get_field('slide_image_mode',$post_id);
+	$slide_background_color =  get_field('slide_background_color',$post_id);
+	$slide_text_color =  get_field('slide_text_color',$post_id);
 ?>
 	<div class="item-<?php echo $global_count++; ?> <?php echo $post_id; ?> slide-item">
 		<?php echo extract_image_tag($slide_image,$slide_image_mode); ?>
 		<div class="slide_text <?php echo $slide_image_mode; ?>"><div class="content"><?php echo $slide_content; ?></div></div>
 		<div class="hidden slide_duration"><?php echo $slide_duration; ?></div>
+		<div class="hidden slide_background_color"><?php echo $slide_background_color; ?></div>
+		<div class="hidden slide_text_color"><?php echo $slide_text_color; ?></div>
 	</div>
 <?php endif; ?>

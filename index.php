@@ -26,7 +26,7 @@
 		     echo "<ul>";
 		     foreach ( $terms as $term ) {
 		       $url = get_term_link($term->slug, 'place');
-		       echo '<li><a href="'.$url.'" title="'.$term->name.'">'. $term->name . "</a></li>";
+		       echo "<li><a href='$url' title='".$term->name."'>". $term->name . "</a> <a href='$url?client=" . $_SERVER['REMOTE_ADDR'] . "' title='".$term->name."'>remember me</a> </li>";
 		     }
 		     echo "</ul>";
 		 }

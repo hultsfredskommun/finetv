@@ -131,6 +131,17 @@
 		if ($("#slide").height() > $("#slide .slide_image").height())
 			$("#slide .slide_image").css("margin-top", ($("#slide").height() - $("#slide .slide_image").height()) / 2 + "px");
 		$("#slide .content").css("margin-top", ($("#slide").height() - $("#slide .content").height()) / 2 + "px");
+
+		if ($("#slide .slide_background_color").html() != "")
+			$("#slide").css("background-color", $("#slide .slide_background_color").html());
+		else
+			$("#slide").css("background-color", "transparent");
+			
+		if ($("#slide .slide_text_color").html() != "")
+			$("#slide").css("color", $("#slide .slide_text_color").html());
+		else
+			$("#slide").css("color", "inherit");
+
 	}
 	
 	
@@ -146,6 +157,10 @@
 		blank_screen_from = $("#source .settings .blank_screen_from").html();
 		blank_screen_to = $("#source .settings .blank_screen_to").html();
 		$("body").css("font-size", $("#source .settings .screen_font_scale").html() + "%");
+		if ($("#source .settings .screen_background_color").html() != "")
+			$("body").css("background-color", $("#source .settings .screen_background_color").html());
+		if ($("#source .settings .screen_text_color").html() != "")
+			$("body").css("color", $("#source .settings .screen_text_color").html());
 	}				
 	
 	function DateString(d){
