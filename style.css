@@ -138,6 +138,15 @@ html, body, #slide { overflow: hidden; cursor: none; }
 	display: none;
 }
 
+/* fill image */
+.whole img, .half-left img, .half-right img {
+	min-height: 100%;
+	min-width: 100%;
+}
+.normal-left img, .normal-right img {
+	min-width: 100%;
+}
+
 /* whole image */
 .whole {
 	position: fixed;
@@ -151,10 +160,6 @@ html, body, #slide { overflow: hidden; cursor: none; }
 .normal-left, .normal-right {
 	width: 50%;
 	overflow: hidden;
-}
-.half-left img, .half-right img {
-	min-height: 100%;
-	min-width: 100%;
 }
 .half-left,
 .normal-left {
