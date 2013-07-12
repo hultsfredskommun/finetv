@@ -35,8 +35,7 @@
 		now_time = TimeString(new Date());
 		
 		// do blank
-		if ((blank_screen_from != "" && blank_screen_from > now_time) 
-		|| (blank_screen_to != "" && blank_screen_to < now_time))
+		if (blank_screen_from < now_time || blank_screen_to > now_time)
 		{
 			if ($("#black").hasClass("hidden"))
 				$("#black").removeClass("hidden");
@@ -176,6 +175,10 @@
 		$("#footer").css("color", $("#source .settings .footer_text_color").html());
 		blank_screen_from = $("#source .settings .blank_screen_from").html();
 		blank_screen_to = $("#source .settings .blank_screen_to").html();
+		if (blank_screen_to == "")
+			blank_screen_to = "00.00";
+		if (blank_screen_from == "")
+			blank_screen_from = "23:59";
 		$("body").css("font-size", $("#source .settings .screen_font_scale").html() + "%");
 		if ($("#source .settings .screen_background_color").html() != "")
 			$("body").css("background-color", $("#source .settings .screen_background_color").html());
