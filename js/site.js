@@ -35,7 +35,8 @@
 		now_time = TimeString(new Date());
 		
 		// do blank
-		if ((blank_screen_from != "" && now_time && blank_screen_from > now_time) || (blank_screen_to != "" && blank_screen_to < now_time))
+		if ((blank_screen_from != "" && blank_screen_from > now_time) 
+		|| (blank_screen_to != "" && blank_screen_to < now_time))
 		{
 			if ($("#black").hasClass("hidden"))
 				$("#black").removeClass("hidden");
