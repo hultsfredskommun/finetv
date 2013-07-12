@@ -133,7 +133,7 @@
 		$("#debug .update").html("update_count: " + update_count + "<br>"
 		);
 		
-		$("#progressbar").hide().removeClass("update");
+		$("#progressbar").fadeOut("slow",function() { $(this).removeClass("update"); });
 		clearTimeout(update_t);
 		update_t=setTimeout(do_update,60000);
 	
