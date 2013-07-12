@@ -97,13 +97,16 @@ html, body, #slide { overflow: hidden; cursor: none; }
 #progressbar {
 	z-index: 999;
 	position: fixed;
-	top: 1em;
+	bottom: 1em;
 	right: 1em;
 	width: 10px;
 	height: 10px;
 	border-radius: 5px;
 	background: #666;
 	box-shadow: 1px 1px 10px #aaa
+}
+#progressbar .update {
+	background: #600;
 }
 #debug {
 	z-index: 998;

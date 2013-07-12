@@ -27,7 +27,8 @@
 	});
 
 	function do_slide() {
-		$("#progressbar").show();
+		if (!$("#progressbar").hasClass("update"))
+			$("#progressbar").show();
 		
 		slide_count++;
 		slide = $("#source .item-" + active_slide);
@@ -84,13 +85,16 @@
 		// wait for next slide
 		active_slide++;
 		clearTimeout(slide_t);
-		
-		$("#progressbar").fadeOut("slow");
+
+		if (!$("#progressbar").hasClass("update"))
+			$("#progressbar").fadeOut("slow");
 		slide_t=setTimeout(do_slide,slide_duration);
 	
 	}
 	
 	function do_update() {
+		$("#progressbar").show().addClass("update");
+
 		update_count++;
 		
 		// Get new slide-items
@@ -129,6 +133,7 @@
 		$("#debug .update").html("update_count: " + update_count + "<br>"
 		);
 		
+		$("#progressbar").hide().removeClass("update");
 		clearTimeout(update_t);
 		update_t=setTimeout(do_update,60000);
 	
