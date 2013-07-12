@@ -17,6 +17,7 @@
 <?php get_header(); ?>
 
 <div id="black" class="hidden"></div>
+<div id="progressbar"></div>
 <div id="debug" class="hidden"><div class="slide"></div><div class="update"></div><div class="console"></div></div>
 <div id="slide"></div>
 <div id="source" class="hidden">

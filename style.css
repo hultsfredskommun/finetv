@@ -65,11 +65,12 @@ h4,
 h5, 
 h6 					{ font-weight:bold; /* This helps to identify headings at the initial build stage, but you should write something more precise later on */ }
 
-h1 { font-size: 500%;}
-h2 { font-size: 400%;}
-h3 { font-size: 300%;}
-h4 { font-size: 250%;}
-h5 { font-size: 200%;}
+h1 { font-size: 400%;}
+h2 { font-size: 300%;}
+h3 { font-size: 250%;}
+h4 { font-size: 200%;}
+h5 { font-size: 150%;}
+html { font-size: 150%; }
 html, body, #slide { overflow: hidden; cursor: none; }
 
 .alignright {
@@ -85,17 +86,27 @@ html, body, #slide { overflow: hidden; cursor: none; }
 	padding: 1em;
 }
 #black {
-	z-index: 999;
+	z-index: 990;
 	position: fixed;
 	top: 0;
 	left: 0;
 	height: 100%;
 	width: 100%;
 	background: black;
-	opacity: 0.8;
+}
+#progressbar {
+	z-index: 999;
+	position: fixed;
+	top: 1em;
+	right: 1em;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background: #666;
+	box-shadow: 1px 1px 10px #aaa
 }
 #debug {
-	z-index: 50;
+	z-index: 998;
 	position: fixed;
 	top: 2em;
 	right: 2em;
@@ -145,10 +156,11 @@ html, body, #slide { overflow: hidden; cursor: none; }
 	min-width: 100%;
 }
 .normal-left img, .normal-right img {
+	max-height: 100%;
 	max-width: 100%;
 }
 
-/* whole image */
+/* images */
 .whole {
 	position: fixed;
 	top: 0;
@@ -188,6 +200,9 @@ html, body, #slide { overflow: hidden; cursor: none; }
 	z-index: 11;
 	text-align: center;
 	overflow: hidden;
+}
+.content {
+	margin: 1em;
 }
 /* ---------------------------------------------------------------------------------------------------------- 
 03 Media queries (using a mobile-first approach) ------------------------------------------------------------

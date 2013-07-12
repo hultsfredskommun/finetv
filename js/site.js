@@ -7,7 +7,7 @@
 	var blank_screen_to = "";
 	var slide_t, update_t;
 	$(document).ready(function(){
-		$("#slide").dblclick(function() {
+		$("body").dblclick(function() {
 			$("#debug").toggleClass("hidden");
 		});
 		set_settings();
@@ -27,12 +27,14 @@
 	});
 
 	function do_slide() {
+		$("#progressbar").show();
+		
 		slide_count++;
 		slide = $("#source .item-" + active_slide);
 		now_time = TimeString(new Date());
 		
 		// do blank
-		if (blank_screen_from > now_time && blank_screen_to < now_time)
+		if ((blank_screen_from != "" && now_time && blank_screen_from > now_time) || (blank_screen_to != "" && blank_screen_to < now_time))
 		{
 			if ($("#black").hasClass("hidden"))
 				$("#black").removeClass("hidden");
@@ -70,7 +72,8 @@
 			slide_duration = 10000;
 			
 		// debug info
-		$("#debug .slide").html("slide_duration: " + slide_duration + "<br>" +
+		$("#debug .slide").html("screen size: " + $("#slide").width() + "x" +$("#slide").height() + "<br>" +
+		"slide_duration: " + slide_duration + "<br>" +
 		"slide_count: " + slide_count + "<br>" +
 		"active_slide: " + active_slide + "<br>" +
 		"now: " + now_time + "<br>" +
@@ -81,6 +84,8 @@
 		// wait for next slide
 		active_slide++;
 		clearTimeout(slide_t);
+		
+		$("#progressbar").fadeOut("slow");
 		slide_t=setTimeout(do_slide,slide_duration);
 	
 	}
