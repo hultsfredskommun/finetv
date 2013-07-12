@@ -381,9 +381,9 @@ function extract_image_tag($image_data,$image_mode)
 	$image_size_name = get_image_size_name($image_data,$image_mode);
 	$image_tag = "";
 
-	if($image_data != null)
+	if($image_size_name != "" && $image_data != null && $image_data["sizes"][$image_size_name] != "")
 	{
-		$image_tag = "<div class='slide_image $image_mode'><img alt='".$image_data['alt']."' src='".$image_data['sizes'][$image_size_name]."' /></div>";
+		$image_tag = "<div class='slide_image $image_mode $image_size_name'><img alt='".$image_data['alt']."' src='".$image_data['sizes'][$image_size_name]."' /></div>";
 	}
 
 	return $image_tag;
@@ -392,13 +392,14 @@ function extract_image_tag($image_data,$image_mode)
 
 function get_image_size_name($image_data, $image_mode)
 {
-	$image_size_name = "thumbnail";
+	global $added_image_sizes;
+	$image_size_name = "";
 	switch ($image_mode) {
 		case 'normal-left':
-			$image_size_name = "half";
+			$image_size_name = "large";
 			break;
 		case 'normal-right':
-			$image_size_name = "half";
+			$image_size_name = "large";
 			break;
 		case 'half-left':
 			$image_size_name = "half";
@@ -410,32 +411,40 @@ function get_image_size_name($image_data, $image_mode)
 			$image_size_name = "whole";
 			break;
 		default:
-			$image_size_name = "thumbnail";
-			break;
+			return ""; // break and return empty
 	}
-
-	if($image_data['sizes'][$image_size_name] == null)
-	{
-		$image_size_name = "large";
-	}
-
-	if($image_data['sizes'][$image_size_name] == null)
-	{
+	// if normal
+	if ($image_size_name == "large") {
+		if($image_data['sizes'][$image_size_name . "-width"] == get_option($image_size_name . "_size_w") || 
+		$image_data['sizes'][$image_size_name . "-height"] == get_option($image_size_name . "_size_h"))
+		{
+			return $image_size_name;
+		}
+		
+		// else try smaller size
 		$image_size_name = "medium";
+		if($image_data['sizes'][$image_size_name . "-width"] == get_option($image_size_name . "_size_w") || 
+		$image_data['sizes'][$image_size_name . "-height"] == get_option($image_size_name . "_size_h"))
+		{
+			return $image_size_name;
+		}
+		return "";
 	}
-
-	if($image_data['sizes'][$image_size_name] == null)
-	{
-		$image_size_name = "thumbnail";
-	}
-
-	if($image_data['sizes'][$image_size_name] == null)
-	{
-		$image_size_name = "orginal";
-	}
-	if($image_data['sizes'][$image_size_name] == null)
-	{
-		$image_size_name = "empty";
+	else { // if half or whole
+		if($image_data['sizes'][$image_size_name . "-width"] == $added_image_sizes[$image_size_name . "_size_w"] && 
+		$image_data['sizes'][$image_size_name . "-height"] == $added_image_sizes[$image_size_name . "_size_h"])
+		{
+			return $image_size_name;
+		}
+		
+		// else try smaller size
+		$image_size_name .= "2";
+		if($image_data['sizes'][$image_size_name . "-width"] == $added_image_sizes[$image_size_name . "_size_w"] && 
+		$image_data['sizes'][$image_size_name . "-height"] == $added_image_sizes[$image_size_name . "_size_h"])
+		{
+			return $image_size_name;
+		}
+		return "";
 	}
 	return $image_size_name;
 }
@@ -448,8 +457,6 @@ function get_image_size_name($image_data, $image_mode)
 		remove_menu_page('link-manager.php'); // Remove the link manager menu
 	    remove_menu_page('edit.php?post_type=page'); // Remove the page menu
 	    remove_menu_page('edit-comments.php'); // Remove the comments Menu
-
-
 	}  
 	add_action( 'admin_menu', 'edit_admin_menus' );  
 
@@ -477,6 +484,17 @@ function get_image_size_name($image_data, $image_mode)
 	} 
 	add_filter('custom_menu_order', 'custom_menu_order'); // Activate custom_menu_order  
 	add_filter('menu_order', 'custom_menu_order');
-	
+
+	$added_image_sizes = array( 'half_size_w' => 960,
+								'half_size_h' => 1080,
+								'whole_size_w' => 1920,
+								'whole_size_h' => 1080,
+								'half2_size_w' => 512,
+								'half2_size_h' => 768,
+								'whole2_size_w' => 1024,
+								'whole2_size_h' => 768
+								);
 	add_image_size( 'half',960,1080,true ); // Half size
 	add_image_size( 'whole',1920,1080,true ); // Full size
+	add_image_size( 'half2',512,768,true ); // Half size
+	add_image_size( 'whole2',1024,768,true ); // Full size

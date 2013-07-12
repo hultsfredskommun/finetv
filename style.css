@@ -105,7 +105,8 @@ html, body, #slide { overflow: hidden; cursor: none; }
 	background: white;
 	color: black;
 }
-#debug .update {
+#debug .update,
+#debug .console {
 	border-top: 1px solid gray;
 	padding-top: 1em;
 	margin-top: 1em;
@@ -144,7 +145,7 @@ html, body, #slide { overflow: hidden; cursor: none; }
 	min-width: 100%;
 }
 .normal-left img, .normal-right img {
-	min-width: 100%;
+	max-width: 100%;
 }
 
 /* whole image */
@@ -159,24 +160,34 @@ html, body, #slide { overflow: hidden; cursor: none; }
 .half-left, .half-right,
 .normal-left, .normal-right {
 	width: 50%;
-	overflow: hidden;
+	text-align: center;
 }
-.half-left,
-.normal-left {
-	float: left;
+.slide_text.half-right,
+.slide_text.normal-right,
+.slide_image.half-left,
+.slide_image.normal-left {
+	left: 0;
 }
-.half-right,
-.normal-right {
-	float: right;
+.slide_text.half-left,
+.slide_text.normal-left,
+.slide_image.half-right,
+.slide_image.normal-right {
+	right: 0;
 }
 
 /* slide setup */
 .slide_image {
+	position: absolute;
+	top: 0;
 	z-index: 10;	
+	overflow: hidden;
 }
 .slide_text {
+	position: absolute;
+	top: 0;
 	z-index: 11;
 	text-align: center;
+	overflow: hidden;
 }
 /* ---------------------------------------------------------------------------------------------------------- 
 03 Media queries (using a mobile-first approach) ------------------------------------------------------------

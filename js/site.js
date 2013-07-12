@@ -7,7 +7,9 @@
 	var blank_screen_to = "";
 	var slide_t, update_t;
 	$(document).ready(function(){
-		
+		$("#slide").dblclick(function() {
+			$("#debug").toggleClass("hidden");
+		});
 		set_settings();
 		
 		if ($("#source").length > 0) {
@@ -30,7 +32,7 @@
 		now_time = TimeString(new Date());
 		
 		// do blank
-		if (blank_screen_from < now_time && blank_screen_to > now_time)
+		if (blank_screen_from > now_time && blank_screen_to < now_time)
 		{
 			if ($("#black").hasClass("hidden"))
 				$("#black").removeClass("hidden");
@@ -55,10 +57,10 @@
 		
 		// add new active slide
 		if (slide.length >= 1) {
-			$("#slide").hide();
+			//$("#slide").hide();
 			$("#slide").html($(slide).html());
 			fix_js_styling();
-			$("#slide").show();
+			//$("#slide").show();
 		}
 		else
 			$("#slide").html("Error, still no slide.");
@@ -130,8 +132,12 @@
 	
 	
 	function fix_js_styling() {
-		if ($("#slide").height() > $("#slide .slide_image").height())
-			$("#slide .slide_image").css("margin-top", ($("#slide").height() - $("#slide .slide_image").height()) / 2 + "px");
+		// vertical align
+		if ($("#slide").height() > $("#slide .slide_image img").height())
+			$("#slide .slide_image").css("margin-top", ($("#slide").height() - $("#slide .slide_image img").height()) / 2 + "px");
+		else
+			$("#slide .slide_image").css("margin-top", "0px");
+		
 		$("#slide .content").css("margin-top", ($("#slide").height() - $("#slide .content").height()) / 2 + "px");
 
 		if ($("#slide .slide_background_color").html() != "")
@@ -143,7 +149,8 @@
 			$("#slide").css("color", $("#slide .slide_text_color").html());
 		else
 			$("#slide").css("color", "inherit");
-
+		
+		
 	}
 	
 	

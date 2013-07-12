@@ -244,7 +244,7 @@ if(function_exists("register_field_group"))
 				'choices' => array (
 					'normal-left' => 'Vänsterställd',
 					'normal-right' => 'Högerställd',
-					'half-left' => 'Vänsterställd	(fyll ut)',
+					'half-left' => 'Vänsterställd (fyll ut)',
 					'half-right' => 'Högerställd (fyll ut)',
 					'whole' => 'Helbild',
 				),
@@ -260,6 +260,20 @@ if(function_exists("register_field_group"))
 				'save_format' => 'object',
 				'preview_size' => 'thumbnail',
 				'library' => 'all',
+			),
+			array (
+				'key' => 'field_51dfc170a4c7e',
+				'label' => 'Textfärg',
+				'name' => 'slide_text_color',
+				'type' => 'color_picker',
+				'default_value' => '',
+			),
+			array (
+				'key' => 'field_51dfc189a4c7f',
+				'label' => 'Bakgrundsfärg',
+				'name' => 'slide_background_color',
+				'type' => 'color_picker',
+				'default_value' => '',
 			),
 		),
 		'location' => array (
