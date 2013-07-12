@@ -55,8 +55,10 @@
 		
 		// add new active slide
 		if (slide.length >= 1) {
+			$("#slide").hide();
 			$("#slide").html($(slide).html());
 			fix_js_styling();
+			$("#slide").show();
 		}
 		else
 			$("#slide").html("Error, still no slide.");

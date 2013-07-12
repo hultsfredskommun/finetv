@@ -383,7 +383,7 @@ function extract_image_tag($image_data,$image_mode)
 
 	if($image_data != null)
 	{
-		$image_tag = "<img class='slide_image $image_mode' alt='".$image_data['alt']."' src='".$image_data['sizes'][$image_size_name]."' />";
+		$image_tag = "<div class='slide_image $image_mode'><img alt='".$image_data['alt']."' src='".$image_data['sizes'][$image_size_name]."' /></div>";
 	}
 
 	return $image_tag;
@@ -395,10 +395,10 @@ function get_image_size_name($image_data, $image_mode)
 	$image_size_name = "thumbnail";
 	switch ($image_mode) {
 		case 'normal-left':
-			$image_size_name = "large";
+			$image_size_name = "half";
 			break;
 		case 'normal-right':
-			$image_size_name = "large";
+			$image_size_name = "half";
 			break;
 		case 'half-left':
 			$image_size_name = "half";
