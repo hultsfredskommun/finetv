@@ -1,33 +1,24 @@
 <?php
 /**
- *  Installera tillägg
+ *  Install Add-ons
  *  
- *  Följande kod kommer att inkludera samtliga fyra premiumtillägg i ditt tema.
- *  Vänligen inkludera inte filer som inte existerar. Detta kommer att resultera i ett felmeddelande.
+ *  The following code will include all 4 premium Add-Ons in your theme.
+ *  Please do not attempt to include a file which does not exist. This will produce an error.
  *  
- *  Alla fält måste inkluderas under 'acf/register_fields' funktionen.
- *  Andra fälttyper, som inställningssidan, kan läggas till utanför denna funktion.
- *  
- *  Koden antar att du har mappen 'add-ons' i ditt tema.
+ *  The following code assumes you have a folder 'add-ons' inside your theme.
  *
- *  VIKTIGT
- *  Tillägg kan inkluderas i premiumteman enligt villkoren.
- *  De får dock INTE inkluderas med andra tillägg, varken premium eller gratis.
- *  Läs följande sida för mer information: http://www.advancedcustomfields.com/terms-conditions/
+ *  IMPORTANT
+ *  Add-ons may be included in a premium theme/plugin as outlined in the terms and conditions.
+ *  For more information, please read:
+ *  - http://www.advancedcustomfields.com/terms-conditions/
+ *  - http://www.advancedcustomfields.com/resources/getting-started/including-lite-mode-in-a-plugin-theme/
  */ 
 
-// Fält 
-add_action('acf/register_fields', 'my_register_fields');
-
-function my_register_fields()
-{
-	//include_once('add-ons/acf-repeater/repeater.php');
-	//include_once('add-ons/acf-gallery/gallery.php');
-	//include_once('add-ons/acf-flexible-content/flexible-content.php');
-}
-
-// Inställningssida 
-//include_once( 'add-ons/acf-options-page/acf-options-page.php' );
+// Tillägg 
+// include_once('add-ons/acf-repeater/acf-repeater.php');
+// include_once('add-ons/acf-gallery/acf-gallery.php');
+// include_once('add-ons/acf-flexible-content/acf-flexible-content.php');
+// include_once( 'add-ons/acf-options-page/acf-options-page.php' );
 
 
 /**
@@ -87,7 +78,6 @@ if(function_exists("register_field_group"))
 				'show_week_number' => 'false',
 				'picker' => 'slider',
 				'save_as_timestamp' => 'true',
-				'default_value' => '',
 			),
 			array (
 				'key' => 'field_51dd1460cae30',
@@ -100,7 +90,6 @@ if(function_exists("register_field_group"))
 				'show_week_number' => 'false',
 				'picker' => 'slider',
 				'save_as_timestamp' => 'true',
-				'default_value' => '',
 			),
 			array (
 				'key' => 'field_51dd380128125',
@@ -109,6 +98,9 @@ if(function_exists("register_field_group"))
 				'type' => 'number',
 				'instructions' => 'Skala storleken på text för att passa just denna skärm i förhållande till andra storlekar på skärm',
 				'default_value' => 100,
+				'placeholder' => '',
+				'prepend' => '',
+				'append' => '',
 				'min' => 10,
 				'max' => 500,
 				'step' => 10,
@@ -158,59 +150,6 @@ if(function_exists("register_field_group"))
 		'menu_order' => 0,
 	));
 	register_field_group(array (
-		'id' => 'acf_schemal%c3%a4ggning',
-		'title' => 'Schemaläggning',
-		'fields' => array (
-			array (
-				'key' => 'field_509cd010aef0a',
-				'label' => 'Från',
-				'name' => 'from',
-				'type' => 'date_time_picker',
-				'instructions' => 'Välj en tidpunkt då sliden börjar visas',
-				'show_date' => 'true',
-				'date_format' => 'yy-mm-dd',
-				'time_format' => 'HH:mm',
-				'show_week_number' => 'false',
-				'picker' => 'slider',
-				'save_as_timestamp' => 'true',
-				'default_value' => '',
-			),
-			array (
-				'key' => 'field_509cd1114e387',
-				'label' => 'Till',
-				'name' => 'to',
-				'type' => 'date_time_picker',
-				'instructions' => 'Välj en tidpunkt då sliden slutar visas',
-				'show_date' => 'true',
-				'date_format' => 'yy-mm-dd',
-				'time_format' => 'HH:mm',
-				'show_week_number' => 'false',
-				'picker' => 'slider',
-				'save_as_timestamp' => 'true',
-				'default_value' => '',
-			),
-		),
-		'location' => array (
-			array (
-				array (
-					'param' => 'post_type',
-					'operator' => '==',
-					'value' => 'slide',
-					'order_no' => 0,
-					'group_no' => 0,
-				),
-			),
-		),
-		'options' => array (
-			'position' => 'side',
-			'layout' => 'default',
-			'hide_on_screen' => array (
-				0 => 'the_content',
-			),
-		),
-		'menu_order' => 0,
-	));
-	register_field_group(array (
 		'id' => 'acf_presentation',
 		'title' => 'Presentation',
 		'fields' => array (
@@ -221,19 +160,12 @@ if(function_exists("register_field_group"))
 				'type' => 'number',
 				'instructions' => 'Hur många sekunder skall sliden visas?',
 				'default_value' => 10,
+				'placeholder' => '',
+				'prepend' => '',
+				'append' => '',
 				'min' => 3,
 				'max' => 120,
 				'step' => 1,
-			),
-			array (
-				'key' => 'field_509cee6347522',
-				'label' => 'Textinnehåll',
-				'name' => 'slide_content',
-				'type' => 'wysiwyg',
-				'instructions' => 'Tänk på att sätta en rubrik eftersom sidnamnet längst uppe på sidan inte kommer med.',
-				'default_value' => '',
-				'toolbar' => 'full',
-				'media_upload' => 'no',
 			),
 			array (
 				'key' => 'field_50a4fad3eba7b',
@@ -253,15 +185,6 @@ if(function_exists("register_field_group"))
 				'multiple' => 0,
 			),
 			array (
-				'key' => 'field_509cef35ff03b',
-				'label' => 'Bild',
-				'name' => 'slide_image',
-				'type' => 'image',
-				'save_format' => 'object',
-				'preview_size' => 'thumbnail',
-				'library' => 'all',
-			),
-			array (
 				'key' => 'field_51dfc170a4c7e',
 				'label' => 'Textfärg',
 				'name' => 'slide_text_color',
@@ -274,6 +197,32 @@ if(function_exists("register_field_group"))
 				'name' => 'slide_background_color',
 				'type' => 'color_picker',
 				'default_value' => '',
+			),
+			array (
+				'key' => 'field_5211cbf8b591e',
+				'label' => 'Från',
+				'name' => 'from',
+				'type' => 'date_time_picker',
+				'instructions' => 'Välj en tidpunkt då sliden börjar visas',
+				'show_date' => 'true',
+				'date_format' => 'yy-mm-dd',
+				'time_format' => 'HH:mm',
+				'show_week_number' => 'false',
+				'picker' => 'slider',
+				'save_as_timestamp' => 'true',
+			),
+			array (
+				'key' => 'field_5211cc41b591f',
+				'label' => 'Till',
+				'name' => 'to',
+				'type' => 'date_time_picker',
+				'instructions' => 'Välj en tidpunkt då sliden slutar visas',
+				'show_date' => 'true',
+				'date_format' => 'yy-mm-dd',
+				'time_format' => 'HH:mm',
+				'show_week_number' => 'false',
+				'picker' => 'slider',
+				'save_as_timestamp' => 'true',
 			),
 		),
 		'location' => array (
@@ -291,16 +240,13 @@ if(function_exists("register_field_group"))
 			'position' => 'normal',
 			'layout' => 'no_box',
 			'hide_on_screen' => array (
-				0 => 'the_content',
-				1 => 'excerpt',
-				2 => 'custom_fields',
-				3 => 'discussion',
-				4 => 'comments',
-				5 => 'revisions',
-				6 => 'author',
-				7 => 'format',
-				8 => 'featured_image',
-				9 => 'tags',
+				0 => 'excerpt',
+				1 => 'custom_fields',
+				2 => 'discussion',
+				3 => 'comments',
+				4 => 'author',
+				5 => 'format',
+				6 => 'tags',
 			),
 		),
 		'menu_order' => 2,

@@ -191,7 +191,7 @@ function create_slide_cms_post_types() {
 		array(
 			'labels' => array(
 			'name' => __( 'Slides' ),
-			'singular_name' => __( 'slide' ),
+			'singular_name' => __( 'Slide' ),
 			'add_new' => __( 'Lägg till ny' ),
 			'add_new_item' => __( 'Lägg till ny slide' ),
 			'edit' => __( 'Ändra' ),
@@ -207,6 +207,7 @@ function create_slide_cms_post_types() {
 			'public' => true,
 			'query_var' => true,
 			'has_archive' => true,
+			'supports' => array('title', 'editor', 'thumbnail'),
 			//'rewrite' => false 
 			'rewrite' => array( 'slug' => 'slide', 'with_front' => true )
 		)
@@ -273,7 +274,7 @@ function my_edit_slide_columns( $columns ) {
     'place' => __( 'Skärm' ),
     'from' => __('Visas från'),
     'to' => __('Visas till'),
-    'date' => __( 'Date' )
+    'date' => __( 'Datum' )
   );
 
   return $columns;
@@ -376,23 +377,8 @@ function is_time24($val)
 	return (bool)preg_match("/^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?$/", $val); 
 } 
 
-function extract_image_tag($image_data,$image_mode)
+function get_image($image_id, $image_mode)
 {
-	$image_size_name = get_image_size_name($image_data,$image_mode);
-	$image_tag = "";
-
-	if($image_size_name != "" && $image_data != null && $image_data["sizes"][$image_size_name] != "")
-	{
-		$image_tag = "<div class='slide_image $image_mode $image_size_name'><img alt='".$image_data['alt']."' src='".$image_data['sizes'][$image_size_name]."' /></div>";
-	}
-
-	return $image_tag;
-}
-
-
-function get_image_size_name($image_data, $image_mode)
-{
-	global $added_image_sizes;
 	$image_size_name = "";
 	switch ($image_mode) {
 		case 'normal-left':
@@ -415,38 +401,32 @@ function get_image_size_name($image_data, $image_mode)
 	}
 	// if normal
 	if ($image_size_name == "large") {
-		if($image_data['sizes'][$image_size_name . "-width"] == get_option($image_size_name . "_size_w") || 
-		$image_data['sizes'][$image_size_name . "-height"] == get_option($image_size_name . "_size_h"))
-		{
-			return $image_size_name;
-		}
+		$image = wp_get_attachment_image( $image_id, $image_size_name );
+		if ($image != "")
+			return "<div class='slide_image $image_mode $image_size_name'>$image</div>";
 		
 		// else try smaller size
 		$image_size_name = "medium";
-		if($image_data['sizes'][$image_size_name . "-width"] == get_option($image_size_name . "_size_w") || 
-		$image_data['sizes'][$image_size_name . "-height"] == get_option($image_size_name . "_size_h"))
-		{
-			return $image_size_name;
-		}
-		return "";
+		$image = wp_get_attachment_image( $image_id, $image_size_name );
+		if ($image != "")
+			return "<div class='slide_image $image_mode $image_size_name'>$image</div>";
 	}
 	else { // if half or whole
-		if($image_data['sizes'][$image_size_name . "-width"] == $added_image_sizes[$image_size_name . "_size_w"] && 
-		$image_data['sizes'][$image_size_name . "-height"] == $added_image_sizes[$image_size_name . "_size_h"])
-		{
-			return $image_size_name;
-		}
+		$image = wp_get_attachment_image( $image_id, $image_size_name );
+		if ($image != "")
+			return "<div class='slide_image $image_mode $image_size_name'>$image</div>";
 		
 		// else try smaller size
 		$image_size_name .= "2";
-		if($image_data['sizes'][$image_size_name . "-width"] == $added_image_sizes[$image_size_name . "_size_w"] && 
-		$image_data['sizes'][$image_size_name . "-height"] == $added_image_sizes[$image_size_name . "_size_h"])
-		{
-			return $image_size_name;
-		}
-		return "";
+		$image = wp_get_attachment_image( $image_id, $image_size_name );
+		if ($image != "")
+			return "<div class='slide_image $image_mode $image_size_name'>$image</div>";
 	}
-	return $image_size_name;
+	$image = wp_get_attachment_image( $image_id, $image_size_name );
+	if ($image != "")
+		return "<div class='slide_image $image_mode $image_size_name'>$image</div>";
+
+	return "";
 }
 
 	function edit_admin_menus() {  
@@ -485,15 +465,6 @@ function get_image_size_name($image_data, $image_mode)
 	add_filter('custom_menu_order', 'custom_menu_order'); // Activate custom_menu_order  
 	add_filter('menu_order', 'custom_menu_order');
 
-	$added_image_sizes = array( 'half_size_w' => 960,
-								'half_size_h' => 1080,
-								'whole_size_w' => 1920,
-								'whole_size_h' => 1080,
-								'half2_size_w' => 512,
-								'half2_size_h' => 768,
-								'whole2_size_w' => 1024,
-								'whole2_size_h' => 768
-								);
 	add_image_size( 'half',960,1080,true ); // Half size
 	add_image_size( 'whole',1920,1080,true ); // Full size
 	add_image_size( 'half2',512,768,true ); // Half size
