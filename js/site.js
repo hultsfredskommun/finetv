@@ -26,6 +26,20 @@
 		}
 	});
 
+	
+	$("html").keyup(function(ev) {
+		//console.log("Handler for .keyup() called." + ev.keyCode);
+		switch(ev.keyCode) {
+			case 39:
+				do_slide();
+				break;
+			case 27:
+				$("#debug").toggleClass("hidden");
+			default:
+				break;
+		}
+	});
+
 	function do_slide() {
 		if (!$("#progressbar").hasClass("update"))
 			$("#progressbar").show();
@@ -45,6 +59,9 @@
 			if (!$("#black").hasClass("hidden"))
 				$("#black").addClass("hidden");
 		}
+		
+		// do time
+		$("#clock").toggle($("#source .settings .clock").html() == "1").html(now_time);
 		
 		// check if slides
 		if (slide.length < 1) {
@@ -165,8 +182,11 @@
 	
 	
 	function set_settings() {
-		$("#header_logo").toggle(($("#source .settings .header_logo").html() != ""));
-		$("#header_logo").attr("href",$("#source .settings .header_logo").html());
+		$("#frame").toggle(($("#source .settings .frame_image").html() != ""));
+		$("#frame_image").attr("src",$("#source .settings .frame_image").html());
+		
+		$("#header").toggle(($("#source .settings .header_logo").html() != ""));
+		$("#header_logo").attr("src",$("#source .settings .header_logo").html());
 		
 		$("#footer").toggle(($("#source .settings .footer_text").html() != ""));
 		$("#footer .padding").html($("#source .settings .footer_text").html());
@@ -197,8 +217,8 @@
 	}
 	function TimeString(d){
 		function pad(n){return n<10 ? '0'+n : n}
-		return pad(d.getUTCHours())+':'
-			  + pad(d.getUTCMinutes());
+		return pad(d.getHours())+':'
+			  + pad(d.getMinutes());
 
 	}
 })(jQuery);

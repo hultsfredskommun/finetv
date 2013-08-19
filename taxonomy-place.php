@@ -28,6 +28,7 @@
 	$wpq = array (post_type =>'slide_settings','taxonomy'=>'place','term'=>$place);
 	$myquery = new WP_Query ($wpq);
 	if ( $myquery->have_posts()) : $myquery->the_post();
+		$frame_image = get_field('frame');
 		$header_logo = get_field('header_logo');
 		$footer_text = get_field("footer_text");
 		$footer_background_color =  get_field('footer_background_color');
@@ -37,9 +38,11 @@
 		$screen_font_scale = get_field('screen_font_scale');
 		$screen_background_color = get_field('screen_background_color');
 		$screen_text_color = get_field('screen_text_color');
+		$clock = get_field('clock');
 	endif; 
 	wp_reset_query();
 ?>
+	<div class="frame_image"><?php echo $frame_image; ?></div>
 	<div class="header_logo"><?php echo $header_logo; ?></div>
 	<div class="footer_text"><?php echo $footer_text; ?></div>
 	<div class="footer_background_color"><?php echo $footer_background_color; ?></div>
@@ -49,6 +52,7 @@
 	<div class="screen_font_scale"><?php echo $screen_font_scale; ?></div>
 	<div class="screen_background_color"><?php echo $screen_background_color; ?></div>
 	<div class="screen_text_color"><?php echo $screen_text_color; ?></div>
+	<div class="clock"><?php echo $clock; ?></div>
 	
 </div>
 

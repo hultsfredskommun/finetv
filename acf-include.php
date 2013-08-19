@@ -45,6 +45,16 @@ if(function_exists("register_field_group"))
 				'library' => 'all',
 			),
 			array (
+				'key' => 'field_5211ed629bfcb',
+				'label' => 'Ram',
+				'name' => 'frame',
+				'type' => 'image',
+				'instructions' => 'Ramen kommer att visas i full storlek och sträckas ut på skärmen 100% x 100%.',
+				'save_format' => 'url',
+				'preview_size' => 'full',
+				'library' => 'all',
+			),
+			array (
 				'key' => 'field_50a3703f18ebf',
 				'label' => 'Text för sidfot',
 				'name' => 'footer_text',
@@ -118,6 +128,14 @@ if(function_exists("register_field_group"))
 				'name' => 'screen_text_color',
 				'type' => 'color_picker',
 				'default_value' => '',
+			),
+			array (
+				'key' => 'field_5211f1d36de8c',
+				'label' => 'Visa klocka',
+				'name' => 'clock',
+				'type' => 'true_false',
+				'message' => '',
+				'default_value' => 1,
 			),
 		),
 		'location' => array (
