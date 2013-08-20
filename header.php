@@ -3,12 +3,16 @@
 <?php 
 	wp_head();
 ?>
-</head><body>
-<div>
-<?php if (isset($_REQUEST["always"])) {
+</head><body <?php post_class(is_home()?"home":""); ?>>
+<?php 
+if (isset($_REQUEST["reset"])) {
+	setcookie( "infotv_redirect", "$place", time() - 60*60, "/"); 
+}
+if (isset($_REQUEST["always"])) {
+	$place = get_term_link($place, 'place' );
 	setcookie( "infotv_redirect", "$place", time() + (10 * 365 * 24 * 60 * 60), "/"); 
-} ?>
-</div>
+}
+ ?>
 <div id="tools" class="hidden">
 	<div>Förhandsgranska:</div>
 	<div class="forcesize" res="1024x768">1024x768</div>

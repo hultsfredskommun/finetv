@@ -12,17 +12,11 @@
  * @subpackage 	Starkers
  * @since 		Starkers 4.0
  */
-	if ($_COOKIE["infotv_redirect"] != "" && !isset($_REQUEST["reset"])) {
-		$term_link = get_term_link($_COOKIE["infotv_redirect"], 'place' );
-		if (!is_wp_error($term_link))
-			wp_redirect( $term_link );
-		echo $term_link->get_error_message();
-	}
 ?>
 <?php get_header(); ?>
 <div id="primary">
 <?php
-	echo "<b>Tillgängliga skärmar</b>";
+	echo "<b>Tillg&auml;ngliga sk&auml;rmar</b>";
 
 	$terms = get_terms("place");
 	$count = count($terms);
