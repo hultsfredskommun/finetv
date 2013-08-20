@@ -1,6 +1,6 @@
 (function($) {
 
-	var active_slide = 1;
+	var active_slide = 0;
 	var slide_count = 0;
 	var update_count = 0;
 	var blank_screen_from = "";
@@ -10,6 +10,7 @@
 		if ($.cookie('infotv_redirect') !== undefined && $("body").hasClass("home")) {
 			window.location = $.cookie('infotv_redirect');
 		}
+		// tools
 		$(".forcesize").each(function() {
 			$(this).hover(function() {
 				$(this).css("text-decoration","underline");
@@ -24,6 +25,11 @@
 				window.open(document.URL, windowName, res);
 			});
 		});
+		$(".play").click(play);
+		$(".pause").click(pause);
+		$(".forward").click(function() {do_slide();});
+		$(".back").click(function() {do_slide(-1);});
+		
 		$("body").dblclick(function() {
 			$("#debug").toggleClass("hidden");
 			$("#tools").toggleClass("hidden");
@@ -46,13 +52,26 @@
 
 	
 	$("html").keyup(function(ev) {
-		//console.log("Handler for .keyup() called." + ev.keyCode);
+		console.log("Handler for .keyup() called." + ev.keyCode);
 		switch(ev.keyCode) {
+			case 80: // p
+				if ($("#progressbar").hasClass("pause")) {
+					play();
+				}
+				else {
+					pause();
+				}
+				break;
 			case 39:
 				do_slide();
 				break;
-			case 27:
+			case 37:
+				do_slide(-1);
+				break;
+			case 27: // esc
+				play();
 				$("#debug").toggleClass("hidden");
+				$("#tools").toggleClass("hidden");
 			default:
 				break;
 		}
@@ -62,7 +81,27 @@
 		$("html").css("cursor","default");
 	});
 
-	function do_slide() {
+	
+	
+	function play() {
+		clearTimeout(slide_t);
+		$("#progressbar").html("");
+		$("#progressbar").removeClass("pause");
+		do_slide();
+	}
+	function pause() {
+		clearTimeout(slide_t);
+		$("#progressbar").html("pause");
+		$("#progressbar").addClass("pause");
+	}
+	
+	function do_slide(add) {
+		if ($("#progressbar").hasClass("pause")) 
+			return;
+		
+		add = typeof add !== 'undefined' ? add : 1;
+		active_slide+=add;
+
 		$("html").css("cursor","none");
 
 		if (!$("#progressbar").hasClass("update"))
@@ -87,7 +126,7 @@
 		// do time
 		$("#clock").toggle($("#source .settings .clock").html() == "1").html(now_time);
 		
-		// check if slides
+		// check if active slide exist
 		if (slide.length < 1) {
 			if (active_slide == 1) { 
 				clearTimeout(slide_t);
@@ -95,7 +134,10 @@
 				$("#slide").html("Error, no slides. " + slide_count + " time.");
 				return;
 			}
-			active_slide = 1;		
+			if (add == 1)
+				active_slide = 1;
+			else 
+				active_slide = $("#source .slide-item").length - 1;
 			slide = $("#source .item-" + active_slide);
 		}
 		
@@ -124,7 +166,6 @@
 		);
 		
 		// wait for next slide
-		active_slide++;
 		clearTimeout(slide_t);
 
 		if (!$("#progressbar").hasClass("update"))
@@ -152,7 +193,7 @@
 					newcount++;
 					$("#source").append($(this));
 				});
-				active_slide = 1;
+				//active_slide = 0;
 
 				// set new settings
 				set_settings();
@@ -161,8 +202,8 @@
 				
 			$("#debug .update").html("update_count: " + update_count + "<br>slide-items: " + (newcount - 1) + "<br>Updated " + DateString(new Date()));
 			
-
-		  
+			$("#progressbar").fadeOut("slow",function() { $(this).removeClass("update"); });
+			
 		}).error(function() { 
 			$("#debug .update").html("Error fetching data. Try again.");
 			clearTimeout(update_t);
@@ -174,7 +215,6 @@
 		$("#debug .update").html("update_count: " + update_count + "<br>"
 		);
 		
-		$("#progressbar").fadeOut("slow",function() { $(this).removeClass("update"); });
 		clearTimeout(update_t);
 		update_t=setTimeout(do_update,60000);
 	
