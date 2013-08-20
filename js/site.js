@@ -7,8 +7,23 @@
 	var blank_screen_to = "";
 	var slide_t, update_t;
 	$(document).ready(function(){
+		$(".forcesize").each(function() {
+			$(this).hover(function() {
+				$(this).css("text-decoration","underline");
+			},function() {
+				$(this).css("text-decoration","none");
+			}).click(function() {
+				res = $(this).attr("res");
+				res = res.split("x");
+
+				var windowName = "popUp";//$(this).attr("name");
+				res = "width="+res[0]+",height="+res[1];
+				window.open(document.URL, windowName, res);
+			});
+		});
 		$("body").dblclick(function() {
 			$("#debug").toggleClass("hidden");
+			$("#tools").toggleClass("hidden");
 		});
 		set_settings();
 		
@@ -40,7 +55,13 @@
 		}
 	});
 
+	$("html").click(function(ev) {
+		$("html").css("cursor","default");
+	});
+
 	function do_slide() {
+		$("html").css("cursor","none");
+
 		if (!$("#progressbar").hasClass("update"))
 			$("#progressbar").show();
 		

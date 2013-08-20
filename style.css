@@ -71,8 +71,12 @@ h3 { font-size: 250%;}
 h4 { font-size: 200%;}
 h5 { font-size: 150%;}
 html { font-size: 250%; }
-html, body, #slide { overflow: hidden; cursor: none; }
+html, body, #slide { overflow: hidden; }
 
+#primary {
+	z-index: 900;
+	position: fixed;
+}
 .alignright {
 	float: right;
 }
@@ -159,6 +163,21 @@ html, body, #slide { overflow: hidden; cursor: none; }
 	padding: 10px;
 	border-radius: 6px;
 	background: rgba(255,255,255,0.6);
+}
+#tools {
+	font-size: 50%;
+	z-index: 110;
+	position: fixed;
+	top: 1em;
+	left: 1em;
+	margin: 0;
+	padding: 10px;
+	border-radius: 6px;
+	background: rgba(34,34,34,0.4);
+	color: rgba(255,255,255,0.8);
+}
+#tools div {
+	margin: 10px;
 }
 #slide {
 	z-index: 20;
