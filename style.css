@@ -223,7 +223,7 @@ html, body, #slide { overflow: hidden; }
 }
 
 /* images */
-.whole {
+.whole-w, .whole-h {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -234,7 +234,6 @@ html, body, #slide { overflow: hidden; }
 .half-left, .half-right,
 .normal-left, .normal-right {
 	width: 50%;
-	text-align: center;
 }
 .slide_text.half-right,
 .slide_text.normal-right,
@@ -260,7 +259,6 @@ html, body, #slide { overflow: hidden; }
 	position: absolute;
 	top: 0;
 	z-index: 11;
-	text-align: center;
 	overflow: hidden;
 }
 .content {
