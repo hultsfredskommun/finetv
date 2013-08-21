@@ -190,19 +190,19 @@ function create_slide_cms_post_types() {
 	register_post_type( 'slide',
 		array(
 			'labels' => array(
-			'name' => __( 'Slides' ),
-			'singular_name' => __( 'Slide' ),
+			'name' => __( 'Sidor' ),
+			'singular_name' => __( 'sida' ),
 			'add_new' => __( 'Lägg till ny' ),
-			'add_new_item' => __( 'Lägg till ny slide' ),
+			'add_new_item' => __( 'Lägg till ny sida' ),
 			'edit' => __( 'Ändra' ),
-			'edit_item' => __( 'Ändra slide' ),
-			'new_item' => __( 'Ny slide' ),
-			'view' => __( 'Se slide' ),
-			'view_item' => __( 'Se slide' ),
-			'search_items' => __( 'Sök slide' ),
-			'not_found' => __( 'Inga slides hittades' ),
-			'not_found_in_trash' => __( 'Inga slides i papperskorgen' ),
-			'parent' => __( 'Förälder till slide' ),
+			'edit_item' => __( 'Ändra sida' ),
+			'new_item' => __( 'Ny sida' ),
+			'view' => __( 'Se sida' ),
+			'view_item' => __( 'Se sida' ),
+			'search_items' => __( 'Sök sida' ),
+			'not_found' => __( 'Inga sidor hittades' ),
+			'not_found_in_trash' => __( 'Inga sidor i papperskorgen' ),
+			'parent' => __( 'Förälder till sida' ),
 			),
 			'public' => true,
 			'query_var' => true,
@@ -393,7 +393,10 @@ function get_image($image_id, $image_mode)
 		case 'half-right':
 			$image_size_name = "half";
 			break;
-		case 'whole':
+		case 'whole-w':
+			$image_size_name = "whole";
+			break;
+		case 'whole-h':
 			$image_size_name = "whole";
 			break;
 		default:

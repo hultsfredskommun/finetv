@@ -211,11 +211,11 @@ html, body, #slide { overflow: hidden; }
 }
 
 /* fill image */
-.whole img, .half-left img, .half-right img {
+.whole-h img, .half-left img, .half-right img {
 	/*max-*/height: 100%;
 	width: auto;
 }
-.normal-left img, .normal-right img {
+.whole-w img, .normal-left img, .normal-right img {
 	/*max-*/width: 100%;
 	height: auto;
 //	max-height: 100%;
