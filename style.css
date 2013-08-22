@@ -237,6 +237,7 @@ html, body, #slide { overflow: hidden; }
 .half-left, .half-right,
 .normal-left, .normal-right {
 	width: 50%;
+	height: 100%;
 }
 .slide_text.half-right,
 .slide_text.normal-right,
