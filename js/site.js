@@ -20,7 +20,7 @@
 				res = $(this).attr("res");
 				res = res.split("x");
 
-				var windowName = "popUp";//$(this).attr("name");
+				var windowName = "info_popUp";//$(this).attr("name");
 				res = "width="+res[0]+",height="+res[1];
 				window.open(document.URL, windowName, res);
 			});
@@ -31,8 +31,13 @@
 		$(".back").click(function() {do_slide(-1);});
 		
 		$("body").dblclick(function() {
-			$("#debug").toggleClass("hidden");
-			$("#tools").toggleClass("hidden");
+			if(window.name == 'info_popUp') {
+				window.close();
+			}
+			else {
+				$("#debug").toggleClass("hidden");
+				$("#tools").toggleClass("hidden");
+			}
 		});
 		set_settings();
 		
