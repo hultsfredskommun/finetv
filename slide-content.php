@@ -10,22 +10,6 @@
 	$slide_image_mode =  get_field('slide_image_mode',$post_id);
 	$slide_background_color =  get_field('slide_background_color',$post_id);
 	$slide_text_color =  get_field('slide_text_color',$post_id);
-	// for compability
-	switch ($slide_image_mode) {
-		case 'normal-left':
-			$slide_image_mode = "half-left";
-			break;
-		case 'normal-right':
-			$slide_image_mode = "half-right";
-			break;
-		case 'whole-h':
-			$slide_image_mode = "whole";
-			break;
-		case 'whole-w':
-			$slide_image_mode = "whole";
-			break;
-	}
-
 ?>
 	<div class="item-<?php echo $global_count++; ?> <?php echo $post_id; ?> slide-item">
 		<?php echo get_image(get_post_thumbnail_id(),$slide_image_mode); ?>

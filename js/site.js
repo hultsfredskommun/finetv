@@ -99,7 +99,7 @@
 		if ($("#progressbar").hasClass("pause")) 
 			return;
 		
-		add = typeof add !== 'undefined' ? add : 1;
+		add = typeof add == 'undefined' ? 1 : -1;
 		active_slide+=add;
 
 		$("html").css("cursor","none");
