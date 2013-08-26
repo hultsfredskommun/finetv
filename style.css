@@ -214,19 +214,13 @@ html, body, #slide { overflow: hidden; }
 }
 
 /* fill image */
-.whole-h img, .half-left img, .half-right img {
+.whole img, .half-left img, .half-right img {
 	/*max-*/height: 100%;
 	width: auto;
 }
-.whole-w img, .normal-left img, .normal-right img {
-	/*max-*/width: 100%;
-	height: auto;
-//	max-height: 100%;
-//	max-width: 100%;
-}
 
 /* images */
-.whole-w, .whole-h {
+.whole {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -234,21 +228,16 @@ html, body, #slide { overflow: hidden; }
 	overflow: hidden;
 }
 /* normal and half image */
-.half-left, .half-right,
-.normal-left, .normal-right {
+.half-left, .half-right {
 	width: 50%;
 	height: 100%;
 }
 .slide_text.half-right,
-.slide_text.normal-right,
-.slide_image.half-left,
-.slide_image.normal-left {
+.slide_image.half-left {
 	left: 0;
 }
 .slide_text.half-left,
-.slide_text.normal-left,
-.slide_image.half-right,
-.slide_image.normal-right {
+.slide_image.half-right {
 	right: 0;
 }
 

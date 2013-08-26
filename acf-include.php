@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *  Install Add-ons
  *  
@@ -192,12 +192,9 @@ if(function_exists("register_field_group"))
 				'type' => 'select',
 				'instructions' => 'Välj hur du vill att bilden skall placera sig på sidan.',
 				'choices' => array (
-					'normal-left' => 'Vänsterställd - fyll bredd',
-					'half-left' => 'Vänsterställd - fyll höjd',
-					'normal-right' => 'Högerställd - fyll bredd',
-					'half-right' => 'Högerställd - fyll höjd',
-					'whole-w' => 'Helbild - fyll bredd',
-					'whole-h' => 'Helbild - fyll höjd',
+					'half-left' => 'Vänsterställd',
+					'half-right' => 'Högerställd',
+					'whole' => 'Helbild',
 				),
 				'default_value' => '',
 				'allow_null' => 0,

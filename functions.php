@@ -379,24 +379,16 @@ function is_time24($val)
 
 function get_image($image_id, $image_mode)
 {
+
 	$image_size_name = "";
 	switch ($image_mode) {
-		case 'normal-left':
-			$image_size_name = "large";
-			break;
-		case 'normal-right':
-			$image_size_name = "large";
-			break;
 		case 'half-left':
 			$image_size_name = "half";
 			break;
 		case 'half-right':
 			$image_size_name = "half";
 			break;
-		case 'whole-w':
-			$image_size_name = "whole";
-			break;
-		case 'whole-h':
+		case 'whole':
 			$image_size_name = "whole";
 			break;
 		default:

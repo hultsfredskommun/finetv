@@ -223,14 +223,34 @@
 	
 	
 	function fix_js_styling() {
+		// fill image
+		screen_ratio = $("#slide").height() / $("#slide").width();
+		img_ratio = $("#slide .slide_image img").height() / $("#slide .slide_image img").width();
+		if ($("#slide .slide_image").hasClass("whole")) {
+			if ( screen_ratio > img_ratio ) {
+				$("#slide .slide_image img").width("auto").height("100%");
+			} else {
+				$("#slide .slide_image img").width("100%").height("auto");
+			}
+		}
+		else if ($("#slide .slide_image").hasClass("half")) {
+			if ( screen_ratio > img_ratio/2 ) {
+				$("#slide .slide_image img").width("auto").height("100%");
+			} else {
+				$("#slide .slide_image img").width("100%").height("auto");
+			}
+		}
+
+		
 		// vertical align
-		if ($("#slide").height() > $("#slide .slide_image img").height())
+		/*if ($("#slide").height() > $("#slide .slide_image img").height())
 			$("#slide .slide_image").css("margin-top", ($("#slide").height() - $("#slide .slide_image img").height()) / 2 + "px");
 		else
 			$("#slide .slide_image").css("margin-top", "0px");
-		
+		*/		
 		$("#slide .content").css("margin-top", ($("#slide").height() - $("#slide .content").height()) / 2 + "px");
 
+		
 		if ($("#slide .slide_background_color").html() != "")
 			$("#slide").css("background-color", $("#slide .slide_background_color").html());
 		else
@@ -240,6 +260,9 @@
 			$("#slide").css("color", $("#slide .slide_text_color").html());
 		else
 			$("#slide").css("color", "inherit");
+			
+		
+		
 		
 		
 	}

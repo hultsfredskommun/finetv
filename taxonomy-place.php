@@ -28,6 +28,7 @@
 	$wpq = array (post_type =>'slide_settings','taxonomy'=>'place','term'=>$place);
 	$myquery = new WP_Query ($wpq);
 	if ( $myquery->have_posts()) : $myquery->the_post();
+		$name = get_the_title();
 		$frame_image = get_field('frame');
 		$header_logo = get_field('header_logo');
 		$footer_text = get_field("footer_text");
@@ -42,6 +43,7 @@
 	endif; 
 	wp_reset_query();
 ?>
+	<div class="settings_name"><?php echo $name; ?></div>
 	<div class="frame_image"><?php echo $frame_image; ?></div>
 	<div class="header_logo"><?php echo $header_logo; ?></div>
 	<div class="footer_text"><?php echo $footer_text; ?></div>
