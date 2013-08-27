@@ -140,6 +140,7 @@
 
 		$now = date("Y-m-d h:i:s",$today_timestamp);
 
+		
 		/* If its only time prefix the current date */
 		if(is_time24($to))
 		{
@@ -163,22 +164,32 @@
 			$to_timestamp = strtotime($to);
 		}
 		
+		echo "\nto: $to_timestamp   from: $from_timestamp  today: $today_timestamp";
+		echo "\nto: $to   from: $from  today: $now";
+		// if both empty
 		if(($from_timestamp == ""|| $from_timestamp == null ) && ($to_timestamp == "" || $to_timestamp == null ))
 		{
+			echo "\n\n 1 . if today greater than from AND today less than to\n\n";
 			$isValidTime = true;
 		}
-		else if($today_timestamp >= $from_timestamp && $today_timestamp <= $to_timestamp)
-		{
-			$isValidTime = true;
-		} 
+		// if today greater than from AND to is empty
 		else if($today_timestamp >= $from_timestamp && ($to == "" || $to == null ))
 		{
+			echo "\n\n 3 . if today greater than from AND to is empty\n\n";
 			$isValidTime = true;
 		}
+		// if today less than to AND from is empty
 		else if($today_timestamp <= $to_timestamp && ($from == null || $from == ""))
 		{
+			echo "\n\n 4 . if today less than to AND from is empty\n\n";
 			$isValidTime = true;
 		}
+		// if today greater than from AND today less than to
+		else if($today_timestamp >= $from_timestamp && $today_timestamp <= $to_timestamp)
+		{
+			echo "\n\n 2 . if today greater than from AND today less than to\n\n";
+			$isValidTime = true;
+		} 
 
 		return $isValidTime;
 
@@ -239,18 +250,18 @@ function create_slide_cms_post_types() {
 
 	// Add new taxonomy, NOT hierarchical (like tags)
 	$labels = array(
-		'name' => _x( 'Plats för skärm', 'taxonomy general name' ),
-		'singular_name' => _x( 'Plats för skärm', 'taxonomy singular name' ),
-		'search_items' =>  __( 'Sök efter skärmar' ),
-		'popular_items' => __( 'Populära platser för skärmar' ),
-		'all_items' => __( 'Alla skärmar' ),
-		'parent_item' => __( 'Förälder skärm' ),
-		'parent_item_colon' => __( 'Förälder skärm:' ),
-		'edit_item' => __( 'Ändra skärm' ), 
-		'update_item' => __( 'Uppdatera skärm' ),
-		'add_new_item' => __( 'Lägg till skärm' ),
-		'new_item_name' => __( 'Ny skärm' ),
-		'menu_name' => __( 'Platser skärm' ),
+		'name' => _x( 'Skärmens plats', 'taxonomy general name' ),
+		'singular_name' => _x( 'Skärmens plats', 'taxonomy singular name' ),
+		'search_items' =>  __( 'Sök efter plats' ),
+		'popular_items' => __( 'Populära platser' ),
+		'all_items' => __( 'Alla platser' ),
+		'parent_item' => __( 'Förälder plats' ),
+		'parent_item_colon' => __( 'Förälder plats:' ),
+		'edit_item' => __( 'Ändra plats' ), 
+		'update_item' => __( 'Uppdatera plats' ),
+		'add_new_item' => __( 'Lägg till plats' ),
+		'new_item_name' => __( 'Ny plats' ),
+		'menu_name' => __( 'Plats' ),
 	); 
 
 	register_taxonomy('place',array('slide','slide_settings'),array(
