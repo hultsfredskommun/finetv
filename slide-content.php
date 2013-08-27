@@ -16,7 +16,7 @@
 ?>
 	<div class="item-<?php echo $global_count++; ?> <?php echo $post_id; ?> slide-item">
 		<?php 
-		isValidTime($to,$from);
+		echo "<div class='hidden'>" . isValidTime($to,$from) . "</div>";
 		echo get_image(get_post_thumbnail_id(),$slide_image_mode); ?>
 		<div class="slide_text <?php echo $slide_image_mode; ?>"><div class="content"><?php the_content(); ?></div></div>
 		<div class="hidden slide_duration"><?php echo $slide_duration; ?></div>
