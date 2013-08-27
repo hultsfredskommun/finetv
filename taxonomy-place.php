@@ -25,7 +25,7 @@
 <div class="settings slide-item">
 <?php
 	/* get settings depending on place */
-	$wpq = array (post_type =>'slide_settings','taxonomy'=>'place','term'=>$place);
+	$wpq = array (post_type =>'slide_settings','taxonomy'=>'place','term'=>$place,'posts_per_page'=>1000);
 	$myquery = new WP_Query ($wpq);
 	if ( $myquery->have_posts()) : $myquery->the_post();
 		$name = get_the_title();
