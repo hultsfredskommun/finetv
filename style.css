@@ -69,8 +69,9 @@ h1 { font-size: 400%;}
 h2 { font-size: 300%;}
 h3 { font-size: 250%;}
 h4 { font-size: 200%;}
-h5 { font-size: 150%;}
-h6 { font-size: 120%;}
+h5 { font-size: 160%;}
+h6 { font-size: 140%;}
+p { font-size: 120%;}
 html { 
 	font-size: 250%; 
 	font-family: Arial; }
