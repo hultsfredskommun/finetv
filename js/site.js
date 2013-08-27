@@ -104,7 +104,9 @@
 		if ($("#progressbar").hasClass("pause")) 
 			return;
 		
-		add = typeof add == 'undefined' ? 1 : -1;
+		if (typeof add == 'undefined')
+			add = 1;
+			
 		active_slide+=add;
 
 		$("html").css("cursor","none");
@@ -114,7 +116,45 @@
 		
 		slide_count++;
 		slide = $("#source .item-" + active_slide);
+		
+		// check if active slide exist
+		if (slide.length < 1) {
+			if (active_slide == 1) { 
+				clearTimeout(slide_t);
+				slide_t=setTimeout(do_slide,10000); // wait 10s and try again
+				$("#slide").html("Error, no slides. " + slide_count + " time.");
+				return;
+			}
+			if (add == 1)
+				active_slide = 1;
+			else 
+				active_slide = $("#source .slide-item").length - 1;
+			slide = $("#source .item-" + active_slide);
+		}
+
+		// set current time and slide time
 		now_time = TimeString(new Date());
+		now_timestamp = Math.round(+new Date()/1000);
+		to_timestamp = from_timestamp = "";
+		to_timestamp = $(slide).find(".slide_to").attr("timestamp");
+		from_timestamp = $(slide).find(".slide_from").attr("timestamp");
+		
+		
+		// check if valid time
+		show_slide = false;
+		if (now_timestamp > from_timestamp && "" == to_timestamp)
+			show_slide = true;
+		else if ("" == from_timestamp && now_timestamp < to_timestamp)
+			show_slide = true;
+		else if	(now_timestamp > from_timestamp && now_timestamp < to_timestamp)
+			show_slide = true;
+		else if	("" == from_timestamp && "" == to_timestamp)
+			show_slide = true;
+		if (!show_slide) {
+			do_slide(add);
+			return;
+		}
+		
 		
 		// do blank
 		if (blank_screen_from < now_time || blank_screen_to > now_time)
@@ -131,20 +171,6 @@
 		// do time
 		$("#clock").toggle($("#source .settings .clock").html() == "1").html(now_time);
 		
-		// check if active slide exist
-		if (slide.length < 1) {
-			if (active_slide == 1) { 
-				clearTimeout(slide_t);
-				slide_t=setTimeout(do_slide,10000); // wait 10s and try again
-				$("#slide").html("Error, no slides. " + slide_count + " time.");
-				return;
-			}
-			if (add == 1)
-				active_slide = 1;
-			else 
-				active_slide = $("#source .slide-item").length - 1;
-			slide = $("#source .item-" + active_slide);
-		}
 		
 		// add new active slide
 		if (slide.length >= 1) {
@@ -167,7 +193,14 @@
 		"active_slide: " + active_slide + "<br>" +
 		"now: " + now_time + "<br>" +
 		"blank_screen_from: " + blank_screen_from + "<br>" +
-		"blank_screen_to: " + blank_screen_to + "<br>"
+		"blank_screen_to: " + blank_screen_to + "<br>" +
+		"from: " + from_timestamp + "<br>" +
+		"now: " + now_timestamp + "<br>" +
+		"to: " + to_timestamp + "<br>" +
+		"from: " + $("#slide .slide_from").html() + "<br>" +
+		"now: " + now_time + "<br>" +
+		"to: " + $("#slide .slide_to").html() + "<br>" +
+		"show_slide: " + show_slide + "<br>"
 		);
 		
 		// wait for next slide

@@ -5,7 +5,7 @@
 	$to = get_field('to',$post_id);
 
 	
-	if(isValidTime($to,$from)) :
+	//if(isValidTime($to,$from)) :
 
 	$slide_duration = get_field('slide_duration',$post_id);
 	$slide_image_mode =  get_field('slide_image_mode',$post_id);
@@ -18,13 +18,22 @@
 		<?php 
 		echo "<div class='hidden'>";
 		isValidTime($to,$from);
+		$from_timestamp = $to_timestamp = "";
+		if($from != "")
+		{
+			$from_timestamp = strtotime($from);
+		}
+		if($to != "")
+		{
+			$to_timestamp = strtotime($to);
+		}
 		echo "</div>";
 		echo get_image(get_post_thumbnail_id(),$slide_image_mode); ?>
 		<div class="slide_text <?php echo $slide_image_mode; ?>"><div class="content"><?php the_content(); ?></div></div>
 		<div class="hidden slide_duration"><?php echo $slide_duration; ?></div>
 		<div class="hidden slide_background_color"><?php echo $slide_background_color; ?></div>
 		<div class="hidden slide_text_color"><?php echo $slide_text_color; ?></div>
-		<div class="hidden slide_to"><?php echo $slide_to; ?></div>
-		<div class="hidden slide_from"><?php echo $slide_from; ?></div>
+		<div class="hidden slide_to" timestamp="<?php echo $to_timestamp; ?>"><?php echo $slide_to; ?></div>
+		<div class="hidden slide_from" timestamp="<?php echo $from_timestamp; ?>"><?php echo $slide_from; ?></div>
 	</div>
-<?php endif; ?>
+<?php //endif; ?>
