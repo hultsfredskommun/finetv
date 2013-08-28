@@ -88,6 +88,7 @@ if(function_exists("register_field_group"))
 				'show_week_number' => 'false',
 				'picker' => 'slider',
 				'save_as_timestamp' => 'true',
+				'get_as_timestamp' => 'false',
 			),
 			array (
 				'key' => 'field_51dd1460cae30',
@@ -100,6 +101,7 @@ if(function_exists("register_field_group"))
 				'show_week_number' => 'false',
 				'picker' => 'slider',
 				'save_as_timestamp' => 'true',
+				'get_as_timestamp' => 'false',
 			),
 			array (
 				'key' => 'field_51dd380128125',
@@ -226,6 +228,7 @@ if(function_exists("register_field_group"))
 				'show_week_number' => 'false',
 				'picker' => 'slider',
 				'save_as_timestamp' => 'true',
+				'get_as_timestamp' => 'false',
 			),
 			array (
 				'key' => 'field_5211cc41b591f',
@@ -239,6 +242,16 @@ if(function_exists("register_field_group"))
 				'show_week_number' => 'false',
 				'picker' => 'slider',
 				'save_as_timestamp' => 'true',
+				'get_as_timestamp' => 'false',
+			),
+			array (
+				'key' => 'field_521d973527086',
+				'label' => 'Viktig sida',
+				'name' => 'slide_important',
+				'type' => 'true_false',
+				'instructions' => 'Om denna är vald som kommer sidan att visas oftare. Varannan viktig sida och varannan oviktig.',
+				'message' => '',
+				'default_value' => 0,
 			),
 		),
 		'location' => array (

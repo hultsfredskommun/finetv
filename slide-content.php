@@ -13,8 +13,10 @@
 	$slide_text_color =  get_field('slide_text_color',$post_id);
 	$slide_from =  get_field('from',$post_id);
 	$slide_to =  get_field('to',$post_id);
+	$slide_important = get_field('slide_important',$post_id);
+	$importantclass = ($slide_important)?" important":" notimportant";
 ?>
-	<div class="item-<?php echo $global_count++; ?> <?php echo $post_id; ?> slide-item">
+	<div class="<?php echo $post_id . $importantclass; ?> slide-item">
 		<?php 
 		echo "<div class='hidden'>";
 		isValidTime($to,$from);

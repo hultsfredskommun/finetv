@@ -59,7 +59,6 @@
 </div>
 
 <?php /* get slides depending on place */ ?>
-<?php $global_count = 1; ?>
 <?php $mainquery = new WP_query(array (post_type =>'slide','taxonomy'=>'place','term'=>$place,'posts_per_page'=>1000)); ?>
 
 <?php if ( $mainquery->have_posts() ) while ( $mainquery->have_posts() ) : $mainquery->the_post(); ?>

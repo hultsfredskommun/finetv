@@ -1,10 +1,14 @@
 (function($) {
 
-	var active_slide = 0;
+	var important_arr;
+	var slide_arr;
+	var active_slide = -1;
+	var active_important_slide = -1;
 	var slide_count = 0;
 	var update_count = 0;
 	var blank_screen_from = "";
 	var blank_screen_to = "";
+	var show_important = true;
 	var slide_t, update_t;
 	$(document).ready(function(){
 		if ($.cookie('infotv_redirect') !== undefined && $("body").hasClass("home")) {
@@ -101,61 +105,22 @@
 	}
 	
 	function do_slide(add) {
+
+		// set clock
+		now_time = TimeString(new Date());
+		$("#clock").toggle($("#source .settings .clock").html() == "1").html(now_time);
+
+		// halt if pause
 		if ($("#progressbar").hasClass("pause")) 
 			return;
 		
-		if (typeof add == 'undefined')
-			add = 1;
-			
-		active_slide+=add;
-
+		// hide cursor
 		$("html").css("cursor","none");
-
-		if (!$("#progressbar").hasClass("update"))
-			$("#progressbar").show();
-		
-		slide_count++;
-		slide = $("#source .item-" + active_slide);
-		
-		// check if active slide exist
-		if (slide.length < 1) {
-			if (active_slide == 1) { 
-				clearTimeout(slide_t);
-				slide_t=setTimeout(do_slide,10000); // wait 10s and try again
-				$("#slide").html("Error, no slides. " + slide_count + " time.");
-				return;
-			}
-			if (add == 1)
-				active_slide = 1;
-			else 
-				active_slide = $("#source .slide-item").length - 1;
-			slide = $("#source .item-" + active_slide);
-		}
-
-		// set current time and slide time
-		now_time = TimeString(new Date());
-		now_timestamp = Math.round(+new Date()/1000);
-		to_timestamp = from_timestamp = "";
-		to_timestamp = $(slide).find(".slide_to").attr("timestamp");
-		from_timestamp = $(slide).find(".slide_from").attr("timestamp");
-		
-		
-		// check if valid time
-		show_slide = false;
-		if (now_timestamp > from_timestamp && "" == to_timestamp)
-			show_slide = true;
-		else if ("" == from_timestamp && now_timestamp < to_timestamp)
-			show_slide = true;
-		else if	(now_timestamp > from_timestamp && now_timestamp < to_timestamp)
-			show_slide = true;
-		else if	("" == from_timestamp && "" == to_timestamp)
-			show_slide = true;
-		if (!show_slide) {
-			do_slide(add);
-			return;
-		}
-		
-		
+			
+		// set default add one step forward
+		if (typeof add == 'undefined')
+			add = 1;	
+			
 		// do blank
 		if (blank_screen_from < now_time || blank_screen_to > now_time)
 		{
@@ -168,49 +133,139 @@
 				$("#black").addClass("hidden");
 		}
 		
-		// do time
-		$("#clock").toggle($("#source .settings .clock").html() == "1").html(now_time);
+		// show progressbar
+		if (!$("#progressbar").hasClass("update"))
+			$("#progressbar").show();
+
+		if (slide_arr == undefined && important_arr == undefined) {
+			clearTimeout(slide_t);
+			slide_t=setTimeout(do_slide,1000); // wait 10s and try again
+			return;
+		}
 		
 		
-		// add new active slide
-		if (slide.length >= 1) {
+		if (important_arr == undefined || important_arr.length == 0)
+			show_important = false;
+		else if (slide_arr == undefined || slide_arr.length == 0)
+			show_important = true;
+		
+		// get next slide
+		if (show_important) {
+			active_important_slide+=add;
+			the_slide = active_important_slide;
+			the_arr = important_arr;
+		}
+		else {
+			active_slide+=add;
+			the_slide = active_slide;
+			the_arr = slide_arr;
+		}
+		
+		slide = the_arr[the_slide];
+		
+		// check if active slide exist
+		if (slide == undefined) {
+			if (the_slide == 0) { 
+				clearTimeout(slide_t);
+				slide_t=setTimeout(do_slide,10000); // wait 10s and try again
+				$("#slide").html("Error, no slides. " + slide_count + " time.");
+				return;
+			}
+			if (add == 1)
+				the_slide = 0;
+			else 
+				the_slide = the_arr.length - 1;
+			// set active slide variables
+			if (show_important) 
+				active_important_slide = the_slide;
+			else 
+				active_slide = the_slide;
+
+			slide = the_arr[the_slide];
+		}
+
+		if (slide) {
+			// set current time and slide time
+			now_time = TimeString(new Date());
+			now_timestamp = Math.round(+new Date()/1000);
+			to_timestamp = from_timestamp = "";
+			to_timestamp = $(slide).find(".slide_to").attr("timestamp");
+			from_timestamp = $(slide).find(".slide_from").attr("timestamp");
+			
+			
+			// check if valid time
+			show_slide = false;
+			if (now_timestamp > from_timestamp && "" == to_timestamp)
+				show_slide = true;
+			else if ("" == from_timestamp && now_timestamp < to_timestamp)
+				show_slide = true;
+			else if	(now_timestamp > from_timestamp && now_timestamp < to_timestamp)
+				show_slide = true;
+			else if	("" == from_timestamp && "" == to_timestamp)
+				show_slide = true;
+			if (!show_slide) {
+				do_slide(add);
+				return;
+			}
+			
+			
+			slide_duration = $(slide).find(".slide_duration").html() * 1000;
+			if (isNaN(slide_duration) || slide_duration == 0)
+				slide_duration = 10000;
+			
+		
+			// NOW make the switch to the new active slide
 			//$("#slide").hide();
 			$("#slide").html($(slide).html());
 			fix_js_styling();
+			show_important = !show_important; // toggle show important flag
+			slide_count++;
 			//$("#slide").show();
-		}
-		else
-			$("#slide").html("Error, still no slide.");
-		
-		slide_duration = $("#slide .slide_duration").html() * 1000;
-		if (isNaN(slide_duration) || slide_duration == 0)
-			slide_duration = 10000;
 			
-		// debug info
-		$("#debug .slide").html("screen size: " + $("#slide").width() + "x" +$("#slide").height() + "<br>" +
-		"slide_duration: " + slide_duration + "<br>" +
-		"slide_count: " + slide_count + "<br>" +
-		"active_slide: " + active_slide + "<br>" +
-		"now: " + now_time + "<br>" +
-		"blank_screen_from: " + blank_screen_from + "<br>" +
-		"blank_screen_to: " + blank_screen_to + "<br>" +
-		"from: " + from_timestamp + "<br>" +
-		"now: " + now_timestamp + "<br>" +
-		"to: " + to_timestamp + "<br>" +
-		"from: " + $("#slide .slide_from").html() + "<br>" +
-		"now: " + now_time + "<br>" +
-		"to: " + $("#slide .slide_to").html() + "<br>" +
-		"show_slide: " + show_slide + "<br>"
-		);
+			
+			// debug info
+			notimportant_length = (slide_arr)?slide_arr.length:0;
+			important_length = (important_arr)?important_arr.length:0;
+			$("#debug .slide").html("screen size: " + $("#slide").width() + "x" +$("#slide").height() + "<br>" +
+			"slide_duration: " + slide_duration + "<br>" +
+			"slide_count: " + slide_count + "<br>" +
+			"active_slide: " + active_slide + "<br>" +
+			"active_important_slide: " + active_important_slide + "<br>" +
+			"not important slides: " + notimportant_length + "<br>" +
+			"important slides: " + important_length + "<br>" +
+			"now: " + now_time + "<br>" +
+			"blank_screen_from: " + blank_screen_from + "<br>" +
+			"blank_screen_to: " + blank_screen_to + "<br>" +
+			"from: " + from_timestamp + "<br>" +
+			"now: " + now_timestamp + "<br>" +
+			"to: " + to_timestamp + "<br>" +
+			"from: " + $("#slide .slide_from").html() + "<br>" +
+			"now: " + now_time + "<br>" +
+			"to: " + $("#slide .slide_to").html() + "<br>" +
+			"show_slide: " + show_slide + "<br>" +
+			"next slide important: " + show_important + "<br>"
+			);
+			
 		
-		// wait for next slide
-		clearTimeout(slide_t);
-
-		if (!$("#progressbar").hasClass("update"))
-			$("#progressbar").fadeOut("slow");
-		slide_t=setTimeout(do_slide,slide_duration);
-	
+			// wait for next slide
+			clearTimeout(slide_t);
+			if (!$("#progressbar").hasClass("update"))
+				$("#progressbar").fadeOut("slow");
+			slide_t=setTimeout(do_slide,slide_duration);
+		
+			
+		}
+		else {
+			$("#slide").html("Error, still no slide.");
+			// wait and try again
+			clearTimeout(slide_t);
+			if (!$("#progressbar").hasClass("update"))
+				$("#progressbar").fadeOut("slow");
+			slide_t=setTimeout(do_slide,10000);
+		}
 	}
+	
+	
 	
 	function do_update() {
 		$("#progressbar").show().addClass("update");
@@ -231,6 +286,8 @@
 					newcount++;
 					$("#source").append($(this));
 				});
+				slide_arr = $("#source .slide-item.notimportant");
+				important_arr = $("#source .slide-item.important");
 				//active_slide = 0;
 
 				// set new settings
