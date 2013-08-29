@@ -422,6 +422,7 @@ function get_image($image_id, $image_mode)
 			'host' => '',
 			'db' => '',
 			'pwd' => '',
+			'user' => '',
 			'query' => '',
 			'connectionstring' => '',
 			'noresults' => 'Inget planerat idag.'
