@@ -232,7 +232,7 @@
 					$("#slide").find("video").parent().css("width","100%").css("height","100%");
 				}
 				if ($("#slide").find(".playaudio").length == 0) {
-					$("#slide").find("video").get(0).volume = 1;
+					$("#slide").find("video").get(0).volume = 0;
 				}
 				else {
 					$("#slide").find("video").get(0).volume = 1;	
@@ -273,7 +273,7 @@
 			
 		}
 		else {
-			$("#slide").html("Error, still no slide.");
+			$("#slide").html("<div class='content'>Ingen information att visa just nu.</div>");
 			// wait and try again
 			clearTimeout(slide_t);
 			if (!$("#progressbar").hasClass("update"))
