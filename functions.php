@@ -438,7 +438,7 @@ function get_image($image_id, $image_mode)
 		// try to connect
 		$link = mssql_connect($host, $user, $pwd);
 		if (!$link) {
-			return $retValue . '<div class="error">Kunde inte kontakta databasen. Fel: ' . mssql_error() . '</div>';
+			return $retValue . '<div class="error">Kunde inte kontakta databasen. Fel: ' . mysql_error() . '</div>';
 		}
 
 		mssql_select_db($db);
