@@ -127,75 +127,8 @@
 	}
 
 
-	function isValidTime($to,$from, $timezone = 'Europe/Stockholm')
-	{
-		$from_timestamp = "";
-		$to_timestamp = "";
 
-		date_default_timezone_set($timezone);
-
-		$isValidTime = false;
-
-		$today_timestamp = time();
-
-		$now = date("Y-m-d h:i:s",$today_timestamp);
-
-		
-		/* If its only time prefix the current date */
-		if(is_time24($to))
-		{
-			$to = date("Y-m-d").' '.$to;
-		}
-
-		/* If its only time prefix the current date */
-		if(is_time24($from))
-		{
-			$from = date("Y-m-d").' '.$from;
-		}
-
-				
-		if($from != "")
-		{
-			$from_timestamp = strtotime($from);
-		}
-
-		if($to != "")
-		{
-			$to_timestamp = strtotime($to);
-		}
-		
-		echo "\nto: $to_timestamp   from: $from_timestamp  today: $today_timestamp";
-		echo "\nto: $to   from: $from  today: $now";
-		// if both empty
-		if(($from_timestamp == ""|| $from_timestamp == null ) && ($to_timestamp == "" || $to_timestamp == null ))
-		{
-			echo "\n\n 1 . if today greater than from AND today less than to\n\n";
-			$isValidTime = true;
-		}
-		// if today greater than from AND to is empty
-		else if($today_timestamp >= $from_timestamp && ($to == "" || $to == null ))
-		{
-			echo "\n\n 3 . if today greater than from AND to is empty\n\n";
-			$isValidTime = true;
-		}
-		// if today less than to AND from is empty
-		else if($today_timestamp <= $to_timestamp && ($from == null || $from == ""))
-		{
-			echo "\n\n 4 . if today less than to AND from is empty\n\n";
-			$isValidTime = true;
-		}
-		// if today greater than from AND today less than to
-		else if($today_timestamp >= $from_timestamp && $today_timestamp <= $to_timestamp)
-		{
-			echo "\n\n 2 . if today greater than from AND today less than to\n\n";
-			$isValidTime = true;
-		} 
-
-		return $isValidTime;
-
-	}
-
-	add_action( 'init', 'create_slide_cms_post_types' );
+add_action( 'init', 'create_slide_cms_post_types' );
 
 function create_slide_cms_post_types() {
 	register_post_type( 'slide',
@@ -272,10 +205,9 @@ function create_slide_cms_post_types() {
 		'query_var' => true,
 		'rewrite' => array( 'slug' => 'platser' ),
 	));
+}
 
-	}
-
-	add_filter( 'manage_edit-slide_columns', 'my_edit_slide_columns' ) ;
+add_filter( 'manage_edit-slide_columns', 'my_edit_slide_columns' ) ;
 
 function my_edit_slide_columns( $columns ) {
 
@@ -299,8 +231,6 @@ function my_manage_slide_columns( $column, $post_id ) {
 
 
   $schedule_mode = get_field('time_settings_choise', $post_id);
-
-
 
    if ( empty( $schedule_mode ) )
    {
@@ -475,3 +405,16 @@ function get_image($image_id, $image_mode)
 	add_image_size( 'whole',1920,1080,true ); // Full size
 	add_image_size( 'half2',512,768,true ); // Half size
 	add_image_size( 'whole2',1024,768,true ); // Full size
+	
+	// shortcodes
+	function nofullscreenvideo_func( $atts ){
+		$retValue = "<div class='hidden nofullscreenvideo'></div>";
+		return $retValue;
+	}
+	add_shortcode( 'normalvideostorlek', 'nofullscreenvideo_func' );
+	function playaudio_func( $atts ){
+		$retValue = "<div class='hidden playaudio'></div>";
+		return $retValue;
+	}
+	add_shortcode( 'spelaljud', 'playaudio_func' );
+	

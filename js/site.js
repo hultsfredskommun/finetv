@@ -106,6 +106,9 @@
 	
 	function do_slide(add) {
 
+		// stop previous video
+		$("#slide").find("video").stop();
+		
 		// set clock
 		now_time = TimeString(new Date());
 		$("#clock").toggle($("#source .settings .clock").html() == "1").html(now_time);
@@ -221,8 +224,22 @@
 			show_important = !show_important; // toggle show important flag
 			slide_count++;
 			//$("#slide").show();
-			
-			
+			// start video if present
+			if ($("#slide").find("video").length > 0) {
+				if ($("#slide").find(".nofullscreenvideo").length == 0) {
+					$("#slide").find(".content").css("margin","0");
+					$("#slide").find("video").css("width","100%").css("height","100%");
+					$("#slide").find("video").parent().css("width","100%").css("height","100%");
+				}
+				if ($("#slide").find(".playaudio").length == 0) {
+					$("#slide").find("video").get(0).volume = 1;
+				}
+				else {
+					$("#slide").find("video").get(0).volume = 1;	
+				}
+				
+				$("#slide").find("video").get(0).play();
+			}
 			// debug info
 			notimportant_length = (slide_arr)?slide_arr.length:0;
 			important_length = (important_arr)?important_arr.length:0;

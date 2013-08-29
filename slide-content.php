@@ -18,18 +18,13 @@
 ?>
 	<div class="<?php echo $post_id . $importantclass; ?> slide-item">
 		<?php 
-		echo "<div class='hidden'>";
-		isValidTime($to,$from);
 		$from_timestamp = $to_timestamp = "";
-		if($from != "")
-		{
+		if($from != "") {
 			$from_timestamp = strtotime($from);
 		}
-		if($to != "")
-		{
+		if($to != "") {
 			$to_timestamp = strtotime($to);
 		}
-		echo "</div>";
 		echo get_image(get_post_thumbnail_id(),$slide_image_mode); ?>
 		<div class="slide_text <?php echo $slide_image_mode; ?>"><div class="content"><?php the_content(); ?></div></div>
 		<div class="hidden slide_duration"><?php echo $slide_duration; ?></div>
