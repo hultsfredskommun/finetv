@@ -417,4 +417,52 @@ function get_image($image_id, $image_mode)
 		return $retValue;
 	}
 	add_shortcode( 'spelaljud', 'playaudio_func' );
-	
+	function sql_func( $atts ){
+		extract( shortcode_atts( array(
+			'host' => '',
+			'db' => '',
+			'pwd' => '',
+			'query' => '',
+			'connectionstring' => '',
+			'noresults' => 'Inget planerat idag.'
+		), $atts, 'sql' ) );
+
+		$retValue = "<div class='hidden sql'></div>";
+		
+		if ($host != "" && $user != "" && $db != "" && $pwd != "" && $query != "")
+			return $retValue . '<div class="error">Kan inte kontakta teledatabasen utan r&auml;tt uppgifter.</div>';
+
+		if (!function_exists("mssql_connect"))
+			return $retValue . '<div class="error">Det m&aring;ste finnas mssql i PHP f&ouml;r att st&auml;lla fr&aring;gan.</div>';
+		
+		// try to connect
+		$link = mssql_connect($host, $user, $pwd);
+		if (!$link) {
+			return $retValue . '<div class="error">Kunde inte kontakta databasen. Fel: ' . mssql_error() . '</div>';
+		}
+
+		mssql_select_db($db);
+		
+		// do the search
+		
+		$count = 1;
+		$result = mssql_query($query);
+		if (!$result || mssql_num_rows($result) == 0) {
+			$retValue .= $noresults;
+		}
+		else
+		{	
+			// make array to return
+			while ($row = mssql_fetch_assoc($result)) {
+				$retValue .= print_r($row,false);
+				//$items[] = array("name" => $row["name"], "title" => $row["title"], "workplace" => $row["workplace"], "phone" => $row["phone"], "mail" => $row["mail"], "phone" => $row["phone"], "phonetime" => $row["phonetime"], "postaddress" => $row["postaddress"], "visitaddress" => $row["visitaddress"]);  
+			}
+		}	
+		mssql_close($link);
+		
+
+
+		
+		return $retValue;
+	}
+	add_shortcode( 'sql', 'sql_func' );
