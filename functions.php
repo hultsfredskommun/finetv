@@ -430,7 +430,7 @@ function get_image($image_id, $image_mode)
 
 		$retValue = "<div class='hidden sql'></div>";
 		
-		if ($host != "" && $user != "" && $db != "" && $pwd != "" && $query != "")
+		if ($host == "" || $user == "" || $db == "" || $pwd == "" || $query == "")
 			return $retValue . '<div class="error">Kan inte kontakta teledatabasen utan r&auml;tt uppgifter.</div>';
 
 		if (!function_exists("mssql_connect"))
