@@ -426,12 +426,13 @@ function get_image($image_id, $image_mode)
 			'query' => '',
 			'connectionstring' => '',
 			'noresults' => 'Inget planerat idag.'
+			'fontsize' => '200%'
 		), $atts, 'sql' ) );
 
 		$retValue = "<div class='hidden sql'></div>";
 		
 		if ($host == "" || $user == "" || $db == "" || $pwd == "" || $query == "")
-			return $retValue . '<div class="error">Kan inte kontakta teledatabasen utan r&auml;tt uppgifter.</div>';
+			return $retValue . '<div class="error">Kan inte kontakta databasen utan r&auml;tt uppgifter.</div>';
 
 		if (!function_exists("mssql_connect"))
 			return $retValue . '<div class="error">Det m&aring;ste finnas mssql i PHP f&ouml;r att st&auml;lla fr&aring;gan.</div>';
@@ -454,10 +455,16 @@ function get_image($image_id, $image_mode)
 		else
 		{	
 			// make array to return
+			echo "<table style='font-size: $fontsize' border='0' cellspacing='10'>";
 			while ($row = mssql_fetch_assoc($result)) {
-				$retValue .= print_r($row,false);
+				echo "<tr>";
+				foreach ($row as $key => $col) {
+					echo "<td>" . $col . "</td>";
+				}
+				echo "</tr>";
 				//$items[] = array("name" => $row["name"], "title" => $row["title"], "workplace" => $row["workplace"], "phone" => $row["phone"], "mail" => $row["mail"], "phone" => $row["phone"], "phonetime" => $row["phonetime"], "postaddress" => $row["postaddress"], "visitaddress" => $row["visitaddress"]);  
 			}
+			echo "</table>";
 		}	
 		mssql_close($link);
 		
@@ -467,3 +474,18 @@ function get_image($image_id, $image_mode)
 		return $retValue;
 	}
 	add_shortcode( 'sql', 'sql_func' );
+
+	
+	
+	add_action('admin_menu', 'infotv_menu');
+
+	function infotv_menu() {
+		add_theme_page('InfoTV Inst&auml;llningar', 'InfoTV Inst&auml;llningar', 'read', 'infotv', 'infotv_settings_function');
+	}
+	
+	function infotv_settings_function() {
+		echo '<div class="wrap"><div id="icon-tools" class="icon32"></div>';
+		echo '<h2>Vilka har anslutit?</h2>';
+		echo 'kommer...';
+		echo '</div>';
+	}
