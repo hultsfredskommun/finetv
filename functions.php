@@ -425,7 +425,7 @@ function get_image($image_id, $image_mode)
 			'user' => '',
 			'query' => '',
 			'connectionstring' => '',
-			'noresults' => 'Inget planerat idag.'
+			'noresults' => 'Inget planerat idag.',
 			'fontsize' => '200%'
 		), $atts, 'sql' ) );
 
