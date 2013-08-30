@@ -426,7 +426,8 @@ function get_image($image_id, $image_mode)
 			'query' => '',
 			'connectionstring' => '',
 			'noresults' => 'Inget planerat idag.',
-			'fontsize' => '200%'
+			'fontsize' => '150%',
+			'padding' => '10px'
 		), $atts, 'sql' ) );
 
 		$retValue = "<div class='hidden sql'></div>";
@@ -455,11 +456,11 @@ function get_image($image_id, $image_mode)
 		else
 		{	
 			// make array to return
-			echo "<table style='font-size: $fontsize' border='0' cellspacing='10'>";
+			echo "<table style='font-size: $fontsize'>";
 			while ($row = mssql_fetch_assoc($result)) {
 				echo "<tr>";
 				foreach ($row as $key => $col) {
-					echo "<td>" . $col . "</td>";
+					echo "<td style='padding: $padding'>" . mb_convert_encoding($col, "ISO-8859-1") . "</td>";
 				}
 				echo "</tr>";
 				//$items[] = array("name" => $row["name"], "title" => $row["title"], "workplace" => $row["workplace"], "phone" => $row["phone"], "mail" => $row["mail"], "phone" => $row["phone"], "phonetime" => $row["phonetime"], "postaddress" => $row["postaddress"], "visitaddress" => $row["visitaddress"]);  
