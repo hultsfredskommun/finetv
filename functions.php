@@ -449,7 +449,6 @@ function get_image($image_id, $image_mode)
 		mssql_select_db($db);
 		
 		// do the search
-		
 		$count = 1;
 		$result = mssql_query($query);
 		if (!$result || mssql_num_rows($result) == 0) {
@@ -457,7 +456,7 @@ function get_image($image_id, $image_mode)
 		}
 		else
 		{	
-			// make array to return
+			//echo table
 			echo "<table style='font-size: $fontsize'>";
 			while ($row = mssql_fetch_assoc($result)) {
 				echo "<tr>";
@@ -465,7 +464,6 @@ function get_image($image_id, $image_mode)
 					echo "<td style='padding: $padding'>" . mb_convert_encoding($col, $convertfrom, $convertto) . "</td>";
 				}
 				echo "</tr>";
-				//$items[] = array("name" => $row["name"], "title" => $row["title"], "workplace" => $row["workplace"], "phone" => $row["phone"], "mail" => $row["mail"], "phone" => $row["phone"], "phonetime" => $row["phonetime"], "postaddress" => $row["postaddress"], "visitaddress" => $row["visitaddress"]);  
 			}
 			echo "</table>";
 		}	

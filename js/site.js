@@ -220,7 +220,6 @@
 			// NOW make the switch to the new active slide
 			//$("#slide").hide();
 			$("#slide").html($(slide).html());
-			fix_js_styling();
 			show_important = !show_important; // toggle show important flag
 			slide_count++;
 			//$("#slide").show();
@@ -240,6 +239,8 @@
 				
 				$("#slide").find("video").get(0).play();
 			}
+			fix_js_styling(slide_duration);
+
 			// debug info
 			notimportant_length = (slide_arr)?slide_arr.length:0;
 			important_length = (important_arr)?important_arr.length:0;
@@ -334,7 +335,10 @@
 
 	
 	
-	function fix_js_styling() {
+	function fix_js_styling(slide_duration) {
+	
+		if (slide_duration > 4000)  slide_duration -= 2000;
+	
 		// fill image
 		screen_ratio = $("#slide").height() / $("#slide").width();
 		img_ratio = $("#slide .slide_image img").height() / $("#slide .slide_image img").width();
@@ -360,7 +364,22 @@
 		else
 			$("#slide .slide_image").css("margin-top", "0px");
 		*/		
-		$("#slide .content").css("margin-top", ($("#slide").height() - $("#slide .content").height()) / 2 + "px");
+		if ($("#slide").height() - $("#footer").height() > $("#slide .content").height()) {
+			$("#slide .content").css("margin-top", ($("#slide").height() - $("#footer").height() - $("#slide .content").height()) / 2 + "px");
+		}
+		else {
+			if ($( "#slide").find("video").length == 0) {
+				$("#slide .content").css("margin-top", "0px");
+				$( "#slide .content" ).animate({
+					top: "-=" + ($("#slide .content").height() - $("#slide").height() + $("#footer").height())
+				  }, slide_duration, function() {
+					// Animation complete.
+				});
+			}
+			else {
+			$("#slide .content").css("margin-top", ($("#slide").height() - $("#footer").height() - $("#slide .content").height()) / 2 + "px");
+			}
+		}
 
 		
 		if ($("#slide .slide_background_color").html() != "")
