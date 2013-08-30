@@ -364,20 +364,23 @@
 		else
 			$("#slide .slide_image").css("margin-top", "0px");
 		*/		
-		if ($("#slide").height() - $("#footer").height() > $("#slide .content").height()) {
-			$("#slide .content").css("margin-top", ($("#slide").height() - $("#footer").height() - $("#slide .content").height()) / 2 + "px");
+		footerheight = 0;
+		if ($("#footer").is(":visible"))
+			footerheight = $("#footer").height();
+		if ($("#slide").height() - footerheight > $("#slide .content").height()) {
+			$("#slide .content").css("margin-top", ($("#slide").height() - footerheight - $("#slide .content").height()) / 2 + "px");
 		}
 		else {
 			if ($( "#slide").find("video").length == 0) {
 				$("#slide .content").css("margin-top", "0px");
 				$( "#slide .content" ).animate({
-					top: "-=" + ($("#slide .content").height() - $("#slide").height() + $("#footer").height())
+					top: "-=" + ($("#slide .content").height() - $("#slide").height() + footerheight)
 				  }, slide_duration, function() {
 					// Animation complete.
 				});
 			}
 			else {
-			$("#slide .content").css("margin-top", ($("#slide").height() - $("#footer").height() - $("#slide .content").height()) / 2 + "px");
+				$("#slide .content").css("margin-top", ($("#slide").height() - footerheight - $("#slide .content").height()) / 2 + "px");
 			}
 		}
 
