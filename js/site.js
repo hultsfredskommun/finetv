@@ -372,9 +372,9 @@
 		}
 		else {
 			if ($( "#slide").find("video").length == 0) {
-				$("#slide .content").css("margin-top", "0px");
+				$("#slide .content").css("margin-top", "50px");
 				$( "#slide .content" ).animate({
-					top: "-=" + ($("#slide .content").height() - $("#slide").height() + footerheight)
+					top: "-=" + ($("#slide .content").height() - $("#slide").height() + footerheight + 60)
 				  }, slide_duration, function() {
 					// Animation complete.
 				});
