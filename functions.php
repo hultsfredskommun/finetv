@@ -427,7 +427,9 @@ function get_image($image_id, $image_mode)
 			'connectionstring' => '',
 			'noresults' => 'Inget planerat idag.',
 			'fontsize' => '150%',
-			'padding' => '10px'
+			'padding' => '10px',
+			'convertfrom' => 'UTF-8',
+			'convertto' => 'ISO-8859-1'
 		), $atts, 'sql' ) );
 
 		$retValue = "<div class='hidden sql'></div>";
@@ -460,7 +462,7 @@ function get_image($image_id, $image_mode)
 			while ($row = mssql_fetch_assoc($result)) {
 				echo "<tr>";
 				foreach ($row as $key => $col) {
-					echo "<td style='padding: $padding'>" . mb_convert_encoding($col, "ISO-8859-1") . "</td>";
+					echo "<td style='padding: $padding'>" . mb_convert_encoding($col, $convertfrom, $convertto) . "</td>";
 				}
 				echo "</tr>";
 				//$items[] = array("name" => $row["name"], "title" => $row["title"], "workplace" => $row["workplace"], "phone" => $row["phone"], "mail" => $row["mail"], "phone" => $row["phone"], "phonetime" => $row["phonetime"], "postaddress" => $row["postaddress"], "visitaddress" => $row["visitaddress"]);  
