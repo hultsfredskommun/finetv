@@ -317,6 +317,7 @@
 			
 			$("#progressbar").fadeOut("slow",function() { $(this).removeClass("update"); });
 			
+			doCount();
 		}).error(function() { 
 			$("#debug .update").html("Error fetching data. Try again.");
 			clearTimeout(update_t);
@@ -442,8 +443,23 @@
 			  + pad(d.getMinutes());
 
 	}
+	function doCount() {
+		data = {action: 'infotv_count'};
+		
+		jQuery.ajax({
+			type: 'POST',
+			url: infotv_data.admin_ajax_url, //"/wp/info/wp-admin/admin-ajax.php", // our PHP handler file
+			data: data,
+			dataType: 'html',
+			success:function(response){
+				$("#debug .ajax").html(response);
+			},
+			error:function(response){
+				$("#debug .ajax").html("error: " + response);
+			}
+		});
+	}
 })(jQuery);
-
 
 
 /*!

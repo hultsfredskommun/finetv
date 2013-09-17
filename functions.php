@@ -69,14 +69,21 @@
 
 	function script_enqueuer() {
 
+
 		wp_register_script( 'transit', get_template_directory_uri().'/js/jquery.transit.min.js', array( 'jquery' ) );
 		wp_enqueue_script( 'transit' );
 
 		wp_register_script( 'site', get_template_directory_uri().'/js/site.js', array( 'jquery' ) );
 		wp_enqueue_script( 'site' );
+		$data = array(
+			'site_url' => site_url(),
+			'admin_ajax_url' => admin_url('admin-ajax.php'));
+		wp_localize_script('site', 'infotv_data', $data);
 
 		wp_register_style( 'screen', get_template_directory_uri().'/style.css', '', '', 'screen' );
         wp_enqueue_style( 'screen' );
+		
+
 	}	
 
 
@@ -365,128 +372,159 @@ function get_image($image_id, $image_mode)
 	return "";
 }
 
-	function edit_admin_menus() {  
-	    global $menu;  
-	    global $submenu;  
-	    
-		remove_menu_page('edit.php'); // Remove the post menu
-		remove_menu_page('link-manager.php'); // Remove the link manager menu
-	    remove_menu_page('edit.php?post_type=page'); // Remove the page menu
-	    remove_menu_page('edit-comments.php'); // Remove the comments Menu
-	}  
-	add_action( 'admin_menu', 'edit_admin_menus' );  
-
-	function custom_menu_order($menu_ord) {  
-		if (!$menu_ord) return true;  
-		return array(  
-			'index.php', // Dashboard  
-			'separator1', // First separator  
-			'edit.php?post_type=slide',
-			'edit.php?post_type=slide_settings',
-			'edit.php', // Posts  
-			'upload.php', // Media  
-			'link-manager.php', // Links  
-			'edit.php?post_type=page', // Pages  
-			'edit-comments.php', // Comments  
-			'separator2', // Third separator 
-			'themes.php', // Appearance
-			
-			'plugins.php', // Plugins  
-			'users.php', // Users  
-			'tools.php', // Tools  
-			'options-general.php', // Settings  
-			'separator-last', // Last separator  
-		);  
-	} 
-	add_filter('custom_menu_order', 'custom_menu_order'); // Activate custom_menu_order  
-	add_filter('menu_order', 'custom_menu_order');
-
-	add_image_size( 'half',960,1080,true ); // Half size
-	add_image_size( 'whole',1920,1080,true ); // Full size
-	add_image_size( 'half2',512,768,true ); // Half size
-	add_image_size( 'whole2',1024,768,true ); // Full size
+function edit_admin_menus() {  
+	global $menu;  
+	global $submenu;  
 	
-	// shortcodes
-	function nofullscreenvideo_func( $atts ){
-		$retValue = "<div class='hidden nofullscreenvideo'></div>";
-		return $retValue;
+	remove_menu_page('edit.php'); // Remove the post menu
+	remove_menu_page('link-manager.php'); // Remove the link manager menu
+	remove_menu_page('edit.php?post_type=page'); // Remove the page menu
+	remove_menu_page('edit-comments.php'); // Remove the comments Menu
+}  
+add_action( 'admin_menu', 'edit_admin_menus' );  
+
+function custom_menu_order($menu_ord) {  
+	if (!$menu_ord) return true;  
+	return array(  
+		'index.php', // Dashboard  
+		'separator1', // First separator  
+		'edit.php?post_type=slide',
+		'edit.php?post_type=slide_settings',
+		'edit.php', // Posts  
+		'upload.php', // Media  
+		'link-manager.php', // Links  
+		'edit.php?post_type=page', // Pages  
+		'edit-comments.php', // Comments  
+		'separator2', // Third separator 
+		'themes.php', // Appearance
+		
+		'plugins.php', // Plugins  
+		'users.php', // Users  
+		'tools.php', // Tools  
+		'options-general.php', // Settings  
+		'separator-last', // Last separator  
+	);  
+} 
+add_filter('custom_menu_order', 'custom_menu_order'); // Activate custom_menu_order  
+add_filter('menu_order', 'custom_menu_order');
+
+add_image_size( 'half',960,1080,true ); // Half size
+add_image_size( 'whole',1920,1080,true ); // Full size
+add_image_size( 'half2',512,768,true ); // Half size
+add_image_size( 'whole2',1024,768,true ); // Full size
+
+// shortcodes
+function nofullscreenvideo_func( $atts ){
+	$retValue = "<div class='hidden nofullscreenvideo'></div>";
+	return $retValue;
+}
+add_shortcode( 'normalvideostorlek', 'nofullscreenvideo_func' );
+function playaudio_func( $atts ){
+	$retValue = "<div class='hidden playaudio'></div>";
+	return $retValue;
+}
+add_shortcode( 'spelaljud', 'playaudio_func' );
+function sql_func( $atts ){
+	extract( shortcode_atts( array(
+		'host' => '',
+		'db' => '',
+		'pwd' => '',
+		'user' => '',
+		'query' => '',
+		'connectionstring' => '',
+		'noresults' => 'Inget planerat idag.',
+		'fontsize' => '150%',
+		'padding' => '10px',
+		'convertfrom' => 'UTF-8',
+		'convertto' => 'ISO-8859-1'
+	), $atts, 'sql' ) );
+
+	$retValue = "<div class='hidden sql'></div>";
+	
+	if ($host == "" || $user == "" || $db == "" || $pwd == "" || $query == "")
+		return $retValue . '<div class="error">Kan inte kontakta databasen utan r&auml;tt uppgifter.</div>';
+
+	if (!function_exists("mssql_connect"))
+		return $retValue . '<div class="error">Det m&aring;ste finnas mssql i PHP f&ouml;r att st&auml;lla fr&aring;gan.</div>';
+	
+	// try to connect
+	$link = mssql_connect($host, $user, $pwd);
+	if (!$link) {
+		return $retValue . '<div class="error">Kunde inte kontakta databasen. Fel: ' . mssql_get_last_message() . '</div>';
 	}
-	add_shortcode( 'normalvideostorlek', 'nofullscreenvideo_func' );
-	function playaudio_func( $atts ){
-		$retValue = "<div class='hidden playaudio'></div>";
-		return $retValue;
+
+	mssql_select_db($db);
+	
+	// do the search
+	$count = 1;
+	$result = mssql_query($query);
+	if (!$result || mssql_num_rows($result) == 0) {
+		$retValue .= $noresults;
 	}
-	add_shortcode( 'spelaljud', 'playaudio_func' );
-	function sql_func( $atts ){
-		extract( shortcode_atts( array(
-			'host' => '',
-			'db' => '',
-			'pwd' => '',
-			'user' => '',
-			'query' => '',
-			'connectionstring' => '',
-			'noresults' => 'Inget planerat idag.',
-			'fontsize' => '150%',
-			'padding' => '10px',
-			'convertfrom' => 'UTF-8',
-			'convertto' => 'ISO-8859-1'
-		), $atts, 'sql' ) );
-
-		$retValue = "<div class='hidden sql'></div>";
-		
-		if ($host == "" || $user == "" || $db == "" || $pwd == "" || $query == "")
-			return $retValue . '<div class="error">Kan inte kontakta databasen utan r&auml;tt uppgifter.</div>';
-
-		if (!function_exists("mssql_connect"))
-			return $retValue . '<div class="error">Det m&aring;ste finnas mssql i PHP f&ouml;r att st&auml;lla fr&aring;gan.</div>';
-		
-		// try to connect
-		$link = mssql_connect($host, $user, $pwd);
-		if (!$link) {
-			return $retValue . '<div class="error">Kunde inte kontakta databasen. Fel: ' . mssql_get_last_message() . '</div>';
-		}
-
-		mssql_select_db($db);
-		
-		// do the search
-		$count = 1;
-		$result = mssql_query($query);
-		if (!$result || mssql_num_rows($result) == 0) {
-			$retValue .= $noresults;
-		}
-		else
-		{	
-			//echo table
-			echo "<table style='font-size: $fontsize'>";
-			while ($row = mssql_fetch_assoc($result)) {
-				echo "<tr>";
-				foreach ($row as $key => $col) {
-					echo "<td style='padding: $padding'>" . mb_convert_encoding($col, $convertfrom, $convertto) . "</td>";
-				}
-				echo "</tr>";
+	else
+	{	
+		//echo table
+		echo "<table style='font-size: $fontsize'>";
+		while ($row = mssql_fetch_assoc($result)) {
+			echo "<tr>";
+			foreach ($row as $key => $col) {
+				echo "<td style='padding: $padding'>" . mb_convert_encoding($col, $convertfrom, $convertto) . "</td>";
 			}
-			echo "</table>";
-		}	
-		mssql_close($link);
+			echo "</tr>";
+		}
+		echo "</table>";
+	}	
+	mssql_close($link);
+	
+
+
+	
+	return $retValue;
+}
+add_shortcode( 'sql', 'sql_func' );
+
+
+
+add_action('admin_menu', 'infotv_menu');
+
+function infotv_menu() {
+	add_theme_page('InfoTV Inst&auml;llningar', 'InfoTV Inst&auml;llningar', 'read', 'infotv', 'infotv_settings_function');
+}
+
+function infotv_settings_function() {
+	echo '<div class="wrap"><div id="icon-tools" class="icon32"></div>';
+	echo '<h2>Vilka har anslutit?</h2><table cellspacing=4 style="margin-top:24px;border: 1px solid gray;">';
+	echo "<tr><td><b>IP</b></td><td><b>Antal uppdateringar</b></td></tr>";
+	foreach (get_option("infotv-settings") as $ip => $count) {
+		echo "<tr><td>" . $ip . "</td><td>" . $count . "</td></tr>";
+	}
+	echo '</table></div>';
+}
+
+//wp_enqueue_script('jquery');
+
+
+function infotv_count_func(){
+	if (get_option("infotv-settings") !== false) {
+		$count = get_option("infotv-settings");
+		if (!is_array($count))
+			$count = Array();
+			
+		if ($count[$_SERVER['REMOTE_ADDR']] != "")
+			$count[$_SERVER['REMOTE_ADDR']]++;
+		else
+			$count[$_SERVER['REMOTE_ADDR']] = 1;
 		
-
-
-		
-		return $retValue;
+		update_option("infotv-settings",$count);
 	}
-	add_shortcode( 'sql', 'sql_func' );
-
-	
-	
-	add_action('admin_menu', 'infotv_menu');
-
-	function infotv_menu() {
-		add_theme_page('InfoTV Inst&auml;llningar', 'InfoTV Inst&auml;llningar', 'read', 'infotv', 'infotv_settings_function');
+	else {
+		add_option("infotv-settings",1);
 	}
+	echo "counted";
+	die();
 	
-	function infotv_settings_function() {
-		echo '<div class="wrap"><div id="icon-tools" class="icon32"></div>';
-		echo '<h2>Vilka har anslutit?</h2>';
-		echo 'kommer...';
-		echo '</div>';
-	}
+}
+add_action('wp_ajax_infotv_count', 'infotv_count_func'); 
+add_action('wp_ajax_nopriv_infotv_count', 'infotv_count_func'); 
+	
+
