@@ -297,7 +297,7 @@
 			if (newsource.find(".slide-item").length > 0) {
 				// do hard refresh every hour
 				if (update_count > 60) {
-					location.reload();
+					location.reload(true);
 				}
 				$("#source").html("Uppdaterad " + Date());
 				newsource.find(".slide-item").each(function() {
@@ -310,6 +310,44 @@
 
 				// set new settings
 				set_settings();
+				
+				/* preload images */
+				$("#source").find("img").each( function() {
+					console.log('loading image ' + $(this).attr("src"));
+					$("<img />").addClass("hidden newimg").attr("src",$(this).attr("src")).load(function() {
+						if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+							console.log('broken image!');
+						} else {
+							console.log('image loaded!');
+						}
+						$(".newimg").remove();
+					});
+				});
+				/* preload video */
+				/*$("#source").find("video").each( function() {
+					console.log('loading video ' + $(this).find("source").attr("src"));
+					
+					$.get($(this).attr("src"),null,function() {
+						console.log('video loaded?');
+					}).done(function() {
+						console.log( "success" );
+					  })
+					  .fail(function() {
+						console.log( "error" );
+					  })
+					  .always(function() {
+						console.log( "finished" );
+					  });
+					//$(this).attr("preload","auto").load();
+					$("<video />").attr("preload","auto").addClass("hidden newvideo").append("<source />").attr("src",$(this).attr("src")).load(function() {
+						if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+							console.log('broken video!');
+						} else {
+							console.log('video loaded!');
+						}
+						$(".newvideo").remove();
+					});
+				});*/
 				
 			}
 				

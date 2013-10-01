@@ -215,7 +215,7 @@ html, body, #slide { overflow: hidden; }
 }
 
 /* fill image */
-.whole img, .half-left img, .half-right img {
+.whole.slide_image img, .half-left.slide_image img, .half-right.slide_image img {
 	/*max-*/height: 100%;
 	width: auto;
 }
@@ -256,7 +256,7 @@ html, body, #slide { overflow: hidden; }
 	overflow: hidden;
 }
 .content {
-	margin: 1em;
+	margin: 2em;
 }
 /* ---------------------------------------------------------------------------------------------------------- 
 03 Media queries (using a mobile-first approach) ------------------------------------------------------------
