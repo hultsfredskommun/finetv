@@ -194,9 +194,11 @@ if(function_exists("register_field_group"))
 				'type' => 'select',
 				'instructions' => 'Välj hur du vill att bilden skall placera sig på sidan.',
 				'choices' => array (
-					'half-left' => 'Vänsterställd',
-					'half-right' => 'Högerställd',
 					'whole' => 'Helbild',
+					'half-left' => 'Vänster (full)',
+					'half-right' => 'Höger (full)',
+					'normal-left' => 'Vänster (normal)',
+					'normal-right' => 'Höger (normal)',
 				),
 				'default_value' => '',
 				'allow_null' => 0,

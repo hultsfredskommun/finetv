@@ -13,6 +13,19 @@
  * @subpackage 	Starkers
  * @since 		Starkers 4.0
  */
+ 
+/* ignore all cache */
+define('DONOTCACHEPAGE', true);
+//Disables page caching for a given page.
+define('DONOTCACHEDB', true);
+//Disables database caching for given page.
+define('DONOTMINIFY', true);
+//Disables minify for a given page.
+define('DONOTCDN', true);
+//Disables content delivery network for a given page.
+define('DONOTCACHCEOBJECT', true);
+//Disables object cache for a given page.
+
 ?>
 <?php get_header(); ?>
 

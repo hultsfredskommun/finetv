@@ -134,6 +134,17 @@
 	}
 
 
+/*
+add_action( 'edit_post', 'w3_flush_page_custom', 10, 1 );
+function w3_flush_page_custom( $post_id ) {
+	if (isset($w3_plugin_totalcache)) {
+		if ( 'slide' == get_post_type( $post_id ) || 'slide_settings' == get_post_type( $post_id ) )
+			$w3_plugin_totalcache->flush_pgcache();
+	}
+} 
+*/
+
+
 
 add_action( 'init', 'create_slide_cms_post_types' );
 
@@ -330,6 +341,12 @@ function get_image($image_id, $image_mode)
 
 	$image_size_name = "";
 	switch ($image_mode) {
+		case 'normal-left':
+			$image_size_name = "large";
+			break;
+		case 'normal-right':
+			$image_size_name = "large";
+			break;
 		case 'half-left':
 			$image_size_name = "half";
 			break;

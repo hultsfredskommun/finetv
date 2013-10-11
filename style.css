@@ -219,6 +219,10 @@ html, body, #slide { overflow: hidden; }
 	/*max-*/height: 100%;
 	width: auto;
 }
+.normal-left.slide_image img, .normal-right.slide_image img {
+	height: auto;
+	width: 100%;
+}
 
 /* images */
 .whole {
@@ -229,14 +233,19 @@ html, body, #slide { overflow: hidden; }
 	overflow: hidden;
 }
 /* normal and half image */
+.normal-left, .normal-right,
 .half-left, .half-right {
 	width: 50%;
 	height: 100%;
 }
+.slide_text.normal-right,
+.slide_image.normal-left,
 .slide_text.half-right,
 .slide_image.half-left {
 	left: 0;
 }
+.slide_text.normal-left,
+.slide_image.normal-right,
 .slide_text.half-left,
 .slide_image.half-right {
 	right: 0;
