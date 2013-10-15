@@ -23,6 +23,8 @@ if (isset($_REQUEST["always"])) {
 	<span class="pause">pause</span>
 	<span class="forward">&gt;&gt;</span></div>
 	<div><a href="<?php echo get_bloginfo("wpurl"); ?>/?reset">V&auml;lj ny InfoTV</a></div>
+	<div><a href="#" class="force_update">Tvinga uppdatera</a></div>
+	<div><a href="#" class="force_reload">Ladda om sidan</a></div>
 </div>
 <div id="frame"><img id="frame_image" /></div>
 <div id="header"><img id="header_logo" /></div>

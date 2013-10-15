@@ -14,6 +14,7 @@
 		if ($.cookie('infotv_redirect') !== undefined && $("body").hasClass("home")) {
 			window.location = $.cookie('infotv_redirect');
 		}
+		
 		// tools
 		$(".forcesize").each(function() {
 			$(this).hover(function() {
@@ -33,6 +34,8 @@
 		$(".pause").click(pause);
 		$(".forward").click(function() {do_slide();});
 		$(".back").click(function() {do_slide(-1);});
+		$(".force_update").click(function(ev) { do_update(); ev.preventDefault(); });
+		$(".force_reload").click(function(ev) { location.reload(true); ev.preventDefault(); });
 		
 		$("body").dblclick(function() {
 			if(window.name == 'info_popUp') {
@@ -217,11 +220,17 @@
 				slide_duration = 10000;
 			
 		
+			if (show_important && active_important_slide == important_arr.length - 1)
+				show_important = !show_important; // toggle show important flag
+			else if (!show_important) {
+				show_important = !show_important; // toggle show important flag
+			}			
+			slide_count++;
+
+
 			// NOW make the switch to the new active slide
 			//$("#slide").hide();
 			$("#slide").html($(slide).html());
-			show_important = !show_important; // toggle show important flag
-			slide_count++;
 			//$("#slide").show();
 			// start video if present
 			if ($("#slide").find("video").length > 0) {
