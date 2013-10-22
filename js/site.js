@@ -493,20 +493,38 @@
 
 	}
 	function doCount() {
-		data = {action: 'infotv_count'};
 		
-		jQuery.ajax({
-			type: 'POST',
-			url: infotv_data.admin_ajax_url, //"/wp/info/wp-admin/admin-ajax.php", // our PHP handler file
-			data: data,
-			dataType: 'html',
-			success:function(response){
-				$("#debug .ajax").html(response);
-			},
-			error:function(response){
-				$("#debug .ajax").html("error: " + response);
+		$.getJSON( "http://smart-ip.net/geoip-json?callback=?",
+			function(data){
+				browser = "other";
+				if ($.browser.webkit)
+					browser = "webkit-" + $.browser.version;
+				else if ($.browser.msie)
+					browser = "msie-" + $.browser.version;
+				else if ($.browser.opera)
+					browser = "opera-" + $.browser.version;
+				else if ($.browser.mozilla)
+					browser = "mozilla-" + $.browser.version;
+				else if ($.browser.safari)
+					browser = "safari-" + $.browser.version;
+
+				data = {action: 'infotv_count', plats: $("#place").html(), browser: browser, ip: data.host };
+				
+				jQuery.ajax({
+					type: 'POST',
+					url: infotv_data.admin_ajax_url, //"/wp/info/wp-admin/admin-ajax.php", // our PHP handler file
+					data: data,
+					dataType: 'html',
+					success:function(data, textStatus, jqXHR ){
+						$("#debug .ajax").html(textStatus);
+					},
+					error:function(jqXHR, textStatus, errorThrown){
+						$("#debug .ajax").html("error: " + textStatus);
+					}
+				});
+				
 			}
-		});
+		);
 	}
 })(jQuery);
 

@@ -145,6 +145,10 @@ function w3_flush_page_custom( $post_id ) {
 */
 
 
+add_action( 'admin_init', 'register_settings' );
+function register_settings() {
+	register_setting( 'infotv-settings', 'count' );
+}
 
 add_action( 'init', 'create_slide_cms_post_types' );
 
@@ -501,43 +505,73 @@ function sql_func( $atts ){
 add_shortcode( 'sql', 'sql_func' );
 
 
+add_action('admin_init', 'infotv_options_init' );
+add_action('admin_menu', 'infotv_options_add_page');
 
-add_action('admin_menu', 'infotv_menu');
-
-function infotv_menu() {
-	add_theme_page('InfoTV Inst&auml;llningar', 'InfoTV Inst&auml;llningar', 'read', 'infotv', 'infotv_settings_function');
+// Init plugin options to white list our options
+function infotv_options_init(){
+	register_setting( 'infotv_options_options', 'infotv', 'infotv_options_validate' );
 }
 
-function infotv_settings_function() {
-	echo '<div class="wrap"><div id="icon-tools" class="icon32"></div>';
-	echo '<h2>Vilka har anslutit?</h2><table cellspacing=4 style="margin-top:24px;border: 1px solid gray;">';
-	echo "<tr><td><b>IP</b></td><td><b>Antal uppdateringar</b></td></tr>";
-	foreach (get_option("infotv-settings") as $ip => $count) {
-		echo "<tr><td>" . $ip . "</td><td>" . $count . "</td></tr>";
-	}
-	echo '</table></div>';
+// Add menu page
+function infotv_options_add_page() {
+	add_theme_page('InfoTV Inst&auml;llningar', 'InfoTV Inst&auml;llningar', 'manage_options', 'infotv_options', 'infotv_options_do_page');
 }
+
+// Sanitize and validate input. Accepts an array, return a sanitized array.
+function infotv_options_validate($input) {
+	// Our first value is either 0 or 1
+	//$input['option1'] = ( $input['option1'] == 1 ? 1 : 0 );
+	
+	// Say our second option must be safe text with no HTML tags
+	//$input['sometext'] =  wp_filter_nohtml_kses($input['sometext']);
+	
+	return $input;
+}
+// Draw the menu page itself
+function infotv_options_do_page() {
+	?>
+	<div class="wrap">
+		<h1>Inställningar för temat InfoTV</h1>
+		<form id="form_hk_options" method="post" action="options.php">
+			<?php settings_fields('infotv_options_options'); ?>
+			<?php $options = get_option('infotv'); ?>
+	
+			<div class="wrap"><div id="icon-tools" class="icon32"></div>
+			<h2>Vilka har anslutit?</h2><table cellspacing=4 style="margin-top:24px;border: 1px solid gray;">
+			<tr><td><b>IP</b></td><td><b>Antal uppdateringar</b></td></tr>
+			<?php if (!empty($options["count"])) 
+			foreach ($options["count"] as $ip => $count) {
+				echo "<tr><td>" . $ip . "</td><td>" . $count . "</td></tr>";
+			}?>
+	</table></div>
+	<?php submit_button(); ?>
+	</form>
+<?php }
 
 //wp_enqueue_script('jquery');
 
 
 function infotv_count_func(){
-	if (get_option("infotv-settings") !== false) {
-		$count = get_option("infotv-settings");
-		if (!is_array($count))
-			$count = Array();
-			
-		if ($count[$_SERVER['REMOTE_ADDR']] != "")
-			$count[$_SERVER['REMOTE_ADDR']]++;
-		else
-			$count[$_SERVER['REMOTE_ADDR']] = 1;
-		
-		update_option("infotv-settings",$count);
+	$options = get_option('infotv');
+	if ($options != null || $options != "") {
+		$options["count"] = Array();
 	}
-	else {
-		add_option("infotv-settings",1);
-	}
-	echo "counted";
+	$count = $options["count"];
+	if (!is_array($count))
+		$count = Array();
+
+	$key = $_POST["plats"] . "_" . $_POST["browser"] . "_" . $_POST['ip'] . "_" . $_SERVER['REMOTE_ADDR'];
+	echo $key;
+	if ($count[$key] != "")
+		$count[$key]++;
+	else
+		$count[$key] = 1;
+	
+	$options["count"] = $count;
+	update_option("infotv",$options);
+
+	echo " counted";
 	die();
 	
 }

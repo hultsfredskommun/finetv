@@ -15,8 +15,8 @@
 	$slide_to =  get_field('to',$post_id);
 	$slide_important = get_field('slide_important',$post_id);
 	$importantclass = ($slide_important)?" important":" notimportant";
-	
 ?>
+	
 	<div class="<?php echo $post_id . $importantclass; ?> slide-item">
 		<?php 
 		$from_timestamp = $to_timestamp = "";

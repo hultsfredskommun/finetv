@@ -29,6 +29,7 @@ define('DONOTCACHCEOBJECT', true);
 ?>
 <?php get_header(); ?>
 
+<div id="place" class="hidden"><?php echo $place; ?></div>
 <div id="black" class="hidden"></div>
 <div id="progressbar"></div>
 <div id="debug" class="hidden"><div class="slide"></div><div class="update"></div><div class="console"></div><div class="ajax"></div></div>
