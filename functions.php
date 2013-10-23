@@ -77,7 +77,7 @@
 		wp_enqueue_script( 'site' );
 		$data = array(
 			'site_url' => site_url(),
-			'admin_ajax_url' => admin_url('admin-ajax.php'));
+			'admin_ajax_url' => str_replace("https://","http://",admin_url('admin-ajax.php')));
 		wp_localize_script('site', 'infotv_data', $data);
 
 		wp_register_style( 'screen', get_template_directory_uri().'/style.css', '', '', 'screen' );
