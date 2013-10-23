@@ -561,7 +561,7 @@ function infotv_count_func(){
 	if (!is_array($count))
 		$count = Array();
 
-	$key = $_POST["plats"] . "_" . $_POST["browser"] . "_" . $_POST['ip'] . "_" . $_SERVER['REMOTE_ADDR'];
+	$key = $_REQUEST["plats"] . "_" . $_REQUEST["browser"] . "_" . $_REQUEST['ip'] . "_" . $_SERVER['REMOTE_ADDR'];
 	echo $key;
 	if ($count[$key] != "")
 		$count[$key]++;
