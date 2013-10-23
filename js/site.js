@@ -11,6 +11,12 @@
 	var show_important = true;
 	var slide_t, update_t;
 	$(document).ready(function(){
+		if ($.cookie('infotv_unique') == undefined) {
+			var d = new Date();
+			var m = d.getMilliseconds();
+			var s = d.getSeconds();
+			$.cookie('infotv_unique',Math.random()*m*s)
+		}
 		if ($.cookie('infotv_redirect') !== undefined && $("body").hasClass("home")) {
 			window.location = $.cookie('infotv_redirect');
 		}
@@ -508,7 +514,7 @@
 				else if ($.browser.safari)
 					browser = "safari-" + $.browser.version;
 
-				data = {action: 'infotv_count', plats: $("#place").html(), browser: browser, ip: data.host };
+				data = {action: 'infotv_count', unique: $.cookie('infotv_unique'), plats: $("#place").html(), browser: browser, ip: data.host, date: DateString(new Date()) };
 				$.post(infotv_data.admin_ajax_url, data, function(data, textStatus, jqXHR ){
 						$("#debug .ajax").html(textStatus + " " + data); 
 						});

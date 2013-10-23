@@ -539,10 +539,10 @@ function infotv_options_do_page() {
 	
 			<div class="wrap"><div id="icon-tools" class="icon32"></div>
 			<h2>Vilka har anslutit?</h2><table cellspacing=4 style="margin-top:24px;border: 1px solid gray;">
-			<tr><td><b>IP</b></td><td><b>Antal uppdateringar</b></td></tr>
+			<tr><td><b>key</b></td><td><b>data</b></td></tr>
 			<?php if (!empty($options["count"])) 
-			foreach ($options["count"] as $ip => $count) {
-				echo "<tr><td>" . $ip . "</td><td>" . $count . "</td></tr>";
+			foreach ($options["count"] as $key => $arr) {
+				echo "<tr><td>" . $key . "</td><td>" . print_r($arr,1) . "</td></tr>";
 			}?>
 	</table></div>
 	<?php submit_button(); ?>
@@ -554,24 +554,24 @@ function infotv_options_do_page() {
 
 function infotv_count_func(){
 	$options = get_option('infotv');
-	if ($options != null || $options != "") {
+	if ($options == null || $options == "") {
 		$options["count"] = Array();
 	}
 	$count = $options["count"];
 	if (!is_array($count))
 		$count = Array();
-
-	$key = $_REQUEST["plats"] . "_" . $_REQUEST["browser"] . "_" . $_REQUEST['ip'] . "_" . $_SERVER['REMOTE_ADDR'];
+	$key = $_REQUEST["unique"];
+	//$key = $_REQUEST["plats"] . "_" . $_REQUEST["browser"] . "_" . $_REQUEST['ip'] . "_" . $_SERVER['REMOTE_ADDR'];
 	echo $key;
 	if ($count[$key] != "")
-		$count[$key]++;
+		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "ip" => $_REQUEST['ip'], "remote_addr" => $_SERVER['REMOTE_ADDR'], "date" => $_REQUEST["date"], "count" => ++$count[$key]["count"]);
 	else
-		$count[$key] = 1;
+		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "ip" => $_REQUEST['ip'], "remote_addr" => $_SERVER['REMOTE_ADDR'], "date" => $_REQUEST["date"], "count" => 0);
 	
 	$options["count"] = $count;
 	update_option("infotv",$options);
-
-	echo " counted";
+	print_r($_REQUEST);
+	echo "$key counted";
 	die();
 	
 }
