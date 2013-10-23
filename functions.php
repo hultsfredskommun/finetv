@@ -539,13 +539,28 @@ function infotv_options_do_page() {
 	
 			<div class="wrap"><div id="icon-tools" class="icon32"></div>
 			<h2>Vilka har anslutit?</h2><table cellspacing=4 style="margin-top:24px;border: 1px solid gray;">
-			<tr><td><b>key</b></td><td><b>data</b></td></tr>
+			<tr>
+				<td><b>key</b></td>
+				<td><b>plats</b></td>
+				<td><b>lokal ip</b></td>
+				<td><b>extern ip</b></td>
+				<td><b>webbläsare</b></td>
+				<td><b>datum</b></td>
+				<td><b>uppdateringar</b></td>
+			</tr>
 			<?php if (!empty($options["count"])) 
 			foreach ($options["count"] as $key => $arr) {
-				echo "<tr><td>" . $key . "</td><td>" . print_r($arr,1) . "</td></tr>";
+				echo "<tr><td>" . $key . "</td>".
+				"<td>" . $arr["plats"] . "</td>".
+				"<td>" . $arr["remote_addr"] . "</td>".
+				"<td>" . $arr["ip"] . "</td>".
+				"<td>" . $arr["browser"] . "</td>".
+				"<td>" . $arr["date"] . "</td>".
+				"<td>" . $arr["count"] . "</td>".
+				"</tr>";
 			}?>
 	</table></div>
-	<?php submit_button(); ?>
+	<?php submit_button("Rensa"); ?>
 	</form>
 <?php }
 
