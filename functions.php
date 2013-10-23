@@ -561,16 +561,17 @@ function infotv_count_func(){
 	if (!is_array($count))
 		$count = Array();
 	$key = $_REQUEST["unique"];
-	//$key = $_REQUEST["plats"] . "_" . $_REQUEST["browser"] . "_" . $_REQUEST['ip'] . "_" . $_SERVER['REMOTE_ADDR'];
-	echo $key;
+
 	if ($count[$key] != "")
 		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "ip" => $_REQUEST['ip'], "remote_addr" => $_SERVER['REMOTE_ADDR'], "date" => $_REQUEST["date"], "count" => ++$count[$key]["count"]);
 	else
-		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "ip" => $_REQUEST['ip'], "remote_addr" => $_SERVER['REMOTE_ADDR'], "date" => $_REQUEST["date"], "count" => 0);
+		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "ip" => $_REQUEST['ip'], "remote_addr" => $_SERVER['REMOTE_ADDR'], "date" => $_REQUEST["date"], "count" => 1);
 	
 	$options["count"] = $count;
 	update_option("infotv",$options);
+	echo "<div class='hidden'>";
 	print_r($_REQUEST);
+	echo "</div>";
 	echo "$key counted";
 	die();
 	
