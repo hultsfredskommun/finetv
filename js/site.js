@@ -509,8 +509,10 @@
 					browser = "safari-" + $.browser.version;
 
 				data = {action: 'infotv_count', plats: $("#place").html(), browser: browser, ip: data.host };
-				
-				jQuery.ajax({
+				$.post(infotv_data.admin_ajax_url, data, function(data, textStatus, jqXHR ){
+						$("#debug .ajax").html(textStatus + " " + data); 
+						});
+				/* $.ajax({
 					type: 'POST',
 					url: infotv_data.admin_ajax_url, //"/wp/info/wp-admin/admin-ajax.php", // our PHP handler file
 					data: data,
@@ -521,7 +523,7 @@
 					error:function(jqXHR, textStatus, errorThrown){
 						$("#debug .ajax").html("error: " + textStatus);
 					}
-				});
+				});*/
 				
 			}
 		);
