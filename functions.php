@@ -542,8 +542,7 @@ function infotv_options_do_page() {
 			<tr>
 				<td><b>key</b></td>
 				<td><b>plats</b></td>
-				<td><b>lokal ip</b></td>
-				<td><b>extern ip</b></td>
+				<td><b>ip</b></td>
 				<td><b>webbläsare</b></td>
 				<td><b>datum</b></td>
 				<td><b>uppdateringar</b></td>
@@ -552,8 +551,7 @@ function infotv_options_do_page() {
 			foreach ($options["count"] as $key => $arr) {
 				echo "<tr><td>" . $key . "</td>".
 				"<td>" . $arr["plats"] . "</td>".
-				"<td>" . $arr["remote_addr"] . "</td>".
-				"<td>" . $arr["ip"] . "</td>".
+				"<td><a href='" . $arr["remote_addr"] . "'>" . $arr["remote_addr"] . "</a></td>".
 				"<td>" . $arr["browser"] . "</td>".
 				"<td>" . $arr["date"] . "</td>".
 				"<td>" . $arr["count"] . "</td>".
