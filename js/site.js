@@ -216,22 +216,26 @@
 				show_slide = true;
 			else if	("" == from_timestamp && "" == to_timestamp)
 				show_slide = true;
-			if (!show_slide) {
-				do_slide(add);
-				return;
-			}
 			
-			
+			// set slide duration
 			slide_duration = $(slide).find(".slide_duration").html() * 1000;
 			if (isNaN(slide_duration) || slide_duration == 0)
 				slide_duration = 10000;
 			
-		
+			// check if toggle show_important
 			if (show_important && active_important_slide == important_arr.length - 1)
 				show_important = !show_important; // toggle show important flag
 			else if (!show_important) {
 				show_important = !show_important; // toggle show important flag
-			}			
+			}
+			
+			// do slide again if not showing this slide
+			if (!show_slide) {
+				do_slide(add);
+				return;
+			}
+
+			// count actual slides shown
 			slide_count++;
 
 
