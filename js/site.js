@@ -130,7 +130,7 @@
 			if (show_important && active_important_slide === important_arr.length - 1) {
 				show_important = !show_important; 
                 active_important_slide = -1;
-            } else if (!show_important) {
+            } else if (show_slide && !show_important) {
 				show_important = !show_important; 
 			}
 			
