@@ -1,175 +1,76 @@
-(function($) {
-
-	var important_arr;
-	var slide_arr;
-	var active_slide = -1;
-	var active_important_slide = -1;
-	var slide_count = 0;
-	var update_count = 0;
-	var blank_screen_from = "";
-	var blank_screen_to = "";
-	var show_important = true;
-	var slide_t, update_t;
-	$(document).ready(function(){
-		if ($.cookie('infotv_unique') == undefined) {
-			var d = new Date();
-			var d = new Date();
-			var m = d.getMilliseconds();
-			var s = d.getSeconds();
-			$.cookie('infotv_unique',Math.random()*m*s)
-		}
-		if ($.cookie('infotv_redirect') !== undefined && $("body").hasClass("home")) {
-			window.location = $.cookie('infotv_redirect');
-		}
-		
-		// tools
-		$(".forcesize").each(function() {
-			$(this).hover(function() {
-				$(this).css("text-decoration","underline");
-			},function() {
-				$(this).css("text-decoration","none");
-			}).click(function() {
-				res = $(this).attr("res");
-				res = res.split("x");
-
-				var windowName = "info_popUp";//$(this).attr("name");
-				res = "width="+res[0]+",height="+res[1];
-				window.open(document.URL, windowName, res);
-			});
-		});
-		$(".play").click(play);
-		$(".pause").click(pause);
-		$(".forward").click(function() {do_slide();});
-		$(".back").click(function() {do_slide(-1);});
-		$(".force_update").click(function(ev) { do_update(); ev.preventDefault(); });
-		$(".force_reload").click(function(ev) { location.reload(true); ev.preventDefault(); });
-		
-		$("body").dblclick(function() {
-			if(window.name == 'info_popUp') {
-				window.close();
-			}
-			else {
-				$("#debug").toggleClass("hidden");
-				$("#tools").toggleClass("hidden");
-			}
-		});
-		set_settings();
-		
-		if ($("#source").length > 0) {
-			/* HANDLE SLIDESHOW */
-			do_slide();
-			
-			/* UPDATE SLIDES FROM SERVER */
-			do_update();
-
-		}
-		else {
-			// just fix some js styling
-			fix_js_styling();
-		}
-	});
+(function ($) {
+	var slide_duration, to_timestamp = "", from_timestamp = "", show_slide, the_slide, the_arr, slide, important_arr, slide_arr, active_slide = -1, active_important_slide = -1, slide_count = 0, update_count = 0, blank_screen_from = "", blank_screen_to = "", show_important = true, slide_t, update_t;
 
 	
-	$("html").keyup(function(ev) {
-		console.log("Handler for .keyup() called." + ev.keyCode);
-		switch(ev.keyCode) {
-			case 80: // p
-				if ($("#progressbar").hasClass("pause")) {
-					play();
-				}
-				else {
-					pause();
-				}
-				break;
-			case 39:
-				do_slide();
-				break;
-			case 37:
-				do_slide(-1);
-				break;
-			case 27: // esc
-				play();
-				$("#debug").toggleClass("hidden");
-				$("#tools").toggleClass("hidden");
-			default:
-				break;
-		}
-	});
+	function DateString(d) {
+		function pad(n) { return n < 10 ? '0' + n : n; }
+		return d.getUTCFullYear() + '-'
+			  + pad(d.getUTCMonth() + 1) + '-'
+			  + pad(d.getUTCDate()) + ' '
+			  + pad(d.getUTCHours()) + ':'
+			  + pad(d.getUTCMinutes());
 
-	$("html").click(function(ev) {
-		$("html").css("cursor","default");
-	});
-
-	
-	
-	function play() {
-		clearTimeout(slide_t);
-		$("#progressbar").html("");
-		$("#progressbar").removeClass("pause");
-		do_slide();
 	}
-	function pause() {
-		clearTimeout(slide_t);
-		$("#progressbar").html("pause");
-		$("#progressbar").addClass("pause");
+	function TimeString(d) {
+		function pad(n) { return n < 10 ? '0' + n : n; }
+		return pad(d.getHours()) + ':'
+			  + pad(d.getMinutes());
+
 	}
-	
 	function do_slide(add) {
 
 		// stop previous video
 		$("#slide").find("video").stop();
 		
 		// set clock
-		now_time = TimeString(new Date());
-		$("#clock").toggle($("#source .settings .clock").html() == "1").html(now_time);
+		var now_time = TimeString(new Date()), now_timestamp = Math.round(new Date() / 1000);
+		$("#clock").toggle($("#source .settings .clock").html() === "1").html(now_time);
 
 		// halt if pause
-		if ($("#progressbar").hasClass("pause")) 
-			return;
+		if ($("#progressbar").hasClass("pause")) { return; }
 		
 		// hide cursor
-		$("html").css("cursor","none");
+		$("html").css("cursor", "none");
 			
 		// set default add one step forward
-		if (typeof add == 'undefined')
-			add = 1;	
+		if (typeof add === 'undefined') { add = 1; }
 			
 		// do blank
-		if (blank_screen_from < now_time || blank_screen_to > now_time)
-		{
-			if ($("#black").hasClass("hidden"))
+		if (blank_screen_from < now_time || blank_screen_to > now_time) {
+			if ($("#black").hasClass("hidden")) {
 				$("#black").removeClass("hidden");
-		}
-		else // remove blank
-		{
-			if (!$("#black").hasClass("hidden"))
+            }
+		} else { // remove blank
+			if (!$("#black").hasClass("hidden")) {
 				$("#black").addClass("hidden");
+            }
 		}
 		
 		// show progressbar
-		if (!$("#progressbar").hasClass("update"))
+		if (!$("#progressbar").hasClass("update")) {
 			$("#progressbar").show();
+        }
 
-		if (slide_arr == undefined && important_arr == undefined) {
+		if (slide_arr === undefined && important_arr === undefined) {
 			clearTimeout(slide_t);
-			slide_t=setTimeout(do_slide,1000); // wait 10s and try again
+			slide_t = setTimeout(do_slide, 1000); // wait 10s and try again
 			return;
 		}
 		
 		
-		if (important_arr == undefined || important_arr.length == 0)
+		if (important_arr === undefined || important_arr.length === 0) {
 			show_important = false;
-		else if (slide_arr == undefined || slide_arr.length == 0)
+        } else if (slide_arr === undefined || slide_arr.length === 0) {
 			show_important = true;
+        }
 		
 		// get next slide
 		if (show_important) {
-			active_important_slide+=add;
+			active_important_slide += add;
 			the_slide = active_important_slide;
 			the_arr = important_arr;
-		}
-		else {
-			active_slide+=add;
+		} else {
+			active_slide += add;
 			the_slide = active_slide;
 			the_arr = slide_arr;
 		}
@@ -177,56 +78,60 @@
 		slide = the_arr[the_slide];
 		
 		// check if active slide exist
-		if (slide == undefined) {
-			if (the_slide == 0) { 
+		if (slide === undefined) {
+			if (the_slide === 0) {
 				clearTimeout(slide_t);
-				slide_t=setTimeout(do_slide,10000); // wait 10s and try again
+				slide_t = setTimeout(do_slide, 10000); // wait 10s and try again
 				$("#slide").html("Error, no slides. " + slide_count + " time.");
 				return;
 			}
-			if (add == 1)
+			if (add === 1) {
 				the_slide = 0;
-			else 
+            } else {
 				the_slide = the_arr.length - 1;
+            }
 			// set active slide variables
-			if (show_important) 
+			if (show_important) {
 				active_important_slide = the_slide;
-			else 
+            } else {
 				active_slide = the_slide;
-
+            }
 			slide = the_arr[the_slide];
 		}
 
 		if (slide) {
 			// set current time and slide time
-			now_time = TimeString(new Date());
-			now_timestamp = Math.round(+new Date()/1000);
-			to_timestamp = from_timestamp = "";
+            now_time = TimeString(new Date());
+			now_timestamp = Math.round(new Date() / 1000);
+			
 			to_timestamp = $(slide).find(".slide_to").attr("timestamp");
 			from_timestamp = $(slide).find(".slide_from").attr("timestamp");
 			
 			
 			// check if valid time
 			show_slide = false;
-			if (now_timestamp > from_timestamp && "" == to_timestamp)
+			if (now_timestamp > from_timestamp && "" === to_timestamp) {
 				show_slide = true;
-			else if ("" == from_timestamp && now_timestamp < to_timestamp)
+            } else if ("" === from_timestamp && now_timestamp < to_timestamp) {
 				show_slide = true;
-			else if	(now_timestamp > from_timestamp && now_timestamp < to_timestamp)
+            } else if (now_timestamp > from_timestamp && now_timestamp < to_timestamp) {
 				show_slide = true;
-			else if	("" == from_timestamp && "" == to_timestamp)
+            } else if ("" === from_timestamp && "" === to_timestamp) {
 				show_slide = true;
-			
+            }
 			// set slide duration
 			slide_duration = $(slide).find(".slide_duration").html() * 1000;
-			if (isNaN(slide_duration) || slide_duration == 0)
+			if (isNaN(slide_duration) || slide_duration === 0) {
 				slide_duration = 10000;
+            }
 			
 			// check if toggle show_important
-			if (show_important && active_important_slide == important_arr.length - 1)
-				show_important = !show_important; // toggle show important flag
-			else if (!show_important) {
-				show_important = !show_important; // toggle show important flag
+            // toggle if all important has been shown
+			if (show_important && active_important_slide === important_arr.length - 1) {
+				show_important = !show_important; 
+                active_important_slide = -1;
+            } else if (!show_important) {
+				show_important = !show_important; 
 			}
 			
 			// do slide again if not showing this slide
@@ -245,16 +150,15 @@
 			//$("#slide").show();
 			// start video if present
 			if ($("#slide").find("video").length > 0) {
-				if ($("#slide").find(".nofullscreenvideo").length == 0) {
-					$("#slide").find(".content").css("margin","0");
-					$("#slide").find("video").css("width","100%").css("height","100%");
-					$("#slide").find("video").parent().css("width","100%").css("height","100%");
+				if ($("#slide").find(".nofullscreenvideo").length === 0) {
+					$("#slide").find(".content").css("margin", "0");
+					$("#slide").find("video").css("width", "100%").css("height", "100%");
+					$("#slide").find("video").parent().css("width", "100%").css("height", "100%");
 				}
-				if ($("#slide").find(".playaudio").length == 0) {
+				if ($("#slide").find(".playaudio").length === 0) {
 					$("#slide").find("video").get(0).volume = 0;
-				}
-				else {
-					$("#slide").find("video").get(0).volume = 1;	
+				} else {
+					$("#slide").find("video").get(0).volume = 1;
 				}
 				
 				$("#slide").find("video").get(0).play();
@@ -457,9 +361,6 @@
 			$("#slide").css("color", "inherit");
 			
 		
-		
-		
-		
 	}
 	
 	
@@ -488,21 +389,6 @@
 			$("body").css("color", $("#source .settings .screen_text_color").html());
 	}				
 	
-	function DateString(d){
-		function pad(n){return n<10 ? '0'+n : n}
-		return d.getUTCFullYear()+'-'
-			  + pad(d.getUTCMonth()+1)+'-'
-			  + pad(d.getUTCDate())+' '
-			  + pad(d.getUTCHours())+':'
-			  + pad(d.getUTCMinutes());
-
-	}
-	function TimeString(d){
-		function pad(n){return n<10 ? '0'+n : n}
-		return pad(d.getHours())+':'
-			  + pad(d.getMinutes());
-
-	}
 	function doCount() {
 		browser = "other";
 		if ($.browser.webkit)
@@ -521,6 +407,106 @@
 				$("#debug .ajax").html(textStatus + " " + data); 
 				});
 	}
+    function play() {
+		clearTimeout(slide_t);
+		$("#progressbar").html("");
+		$("#progressbar").removeClass("pause");
+		do_slide();
+	}
+	function pause() {
+		clearTimeout(slide_t);
+		$("#progressbar").html("pause");
+		$("#progressbar").addClass("pause");
+	}
+
+    $(document).ready(function () {
+		if ($.cookie('infotv_unique') === undefined) {
+			var d = new Date(), m = d.getMilliseconds(), s = d.getSeconds();
+			$.cookie('infotv_unique', Math.random() * m * s);
+		}
+		if ($.cookie('infotv_redirect') !== undefined && $("body").hasClass("home")) {
+			window.location = $.cookie('infotv_redirect');
+		}
+		
+		// tools
+		$(".forcesize").each(function () {
+			$(this).hover(function () {
+				$(this).css("text-decoration", "underline");
+			}, function () {
+				$(this).css("text-decoration", "none");
+			}).click(function () {
+				var res = $(this).attr("res"), windowName = "info_popUp";//$(this).attr("name");
+                res = res.split("x");
+				res = "width=" + res[0] + ",height=" + res[1];
+				window.open(document.URL, windowName, res);
+			});
+		});
+		$(".play").click(play);
+		$(".pause").click(pause);
+		$(".forward").click(function () { do_slide(); });
+		$(".back").click(function () { do_slide(-1); });
+		$(".force_update").click(function (ev) { do_update(); ev.preventDefault(); });
+		$(".force_reload").click(function (ev) { location.reload(true); ev.preventDefault(); });
+		
+		$("body").dblclick(function () {
+			if(window.name == 'info_popUp') {
+				window.close();
+			}
+			else {
+				$("#debug").toggleClass("hidden");
+				$("#tools").toggleClass("hidden");
+			}
+		});
+		set_settings();
+		
+		if ($("#source").length > 0) {
+			/* HANDLE SLIDESHOW */
+			do_slide();
+			
+			/* UPDATE SLIDES FROM SERVER */
+			do_update();
+
+		}
+		else {
+			// just fix some js styling
+			fix_js_styling();
+		}
+	});
+
+	
+	$("html").keyup(function (ev) {
+		console.log("Handler for .keyup() called." + ev.keyCode);
+		switch(ev.keyCode) {
+			case 80: // p
+				if ($("#progressbar").hasClass("pause")) {
+					play();
+				}
+				else {
+					pause();
+				}
+				break;
+			case 39:
+				do_slide();
+				break;
+			case 37:
+				do_slide(-1);
+				break;
+			case 27: // esc
+				play();
+				$("#debug").toggleClass("hidden");
+				$("#tools").toggleClass("hidden");
+			default:
+				break;
+		}
+	});
+
+	$("html").click(function (ev) {
+		$("html").css("cursor","default");
+	});
+
+	
+	
+	
 })(jQuery);
 
 
