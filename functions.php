@@ -173,7 +173,7 @@ function create_slide_cms_post_types() {
 			'public' => true,
 			'query_var' => true,
 			'has_archive' => true,
-			'supports' => array('title', 'editor', 'thumbnail'),
+			'supports' => array('title', 'editor', 'thumbnail', 'revisions'),
 			//'rewrite' => false 
 			'rewrite' => array( 'slug' => 'slide', 'with_front' => true )
 		)
