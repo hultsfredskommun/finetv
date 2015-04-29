@@ -17,7 +17,7 @@
 	$importantclass = ($slide_important)?" important":" notimportant";
 ?>
 	
-	<div class="<?php echo $post_id . $importantclass; ?> slide-item">
+	<div data-id="<?php echo $post_id; ?>" class="<?php echo $post_id . $importantclass; ?> slide-item">
 		<?php 
 		$from_timestamp = $to_timestamp = "";
 		if($from != "") {

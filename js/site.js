@@ -146,25 +146,27 @@
 
 			// NOW make the switch to the new active slide
 			//$("#slide").hide();
-			$("#slide").html($(slide).html());
-			//$("#slide").show();
-			// start video if present
-			if ($("#slide").find("video").length > 0) {
-				if ($("#slide").find(".nofullscreenvideo").length === 0) {
-					$("#slide").find(".content").css("margin", "0");
-					$("#slide").find("video").css("width", "100%").css("height", "100%");
-					$("#slide").find("video").parent().css("width", "100%").css("height", "100%");
+			if ($("#slide").attr("data-id") != $(slide).attr("data-id")) {	
+				$("#slide").html($(slide).html());
+				$("#slide").attr("data-id",$(slide).attr("data-id"));
+				//$("#slide").show();
+				// start video if present
+				if ($("#slide").find("video").length > 0) {
+					if ($("#slide").find(".nofullscreenvideo").length === 0) {
+						$("#slide").find(".content").css("margin", "0");
+						$("#slide").find("video").css("width", "100%").css("height", "100%");
+						$("#slide").find("video").parent().css("width", "100%").css("height", "100%");
+					}
+					if ($("#slide").find(".playaudio").length === 0) {
+						$("#slide").find("video").get(0).volume = 0;
+					} else {
+						$("#slide").find("video").get(0).volume = 1;
+					}
+					
+					$("#slide").find("video").get(0).play();
 				}
-				if ($("#slide").find(".playaudio").length === 0) {
-					$("#slide").find("video").get(0).volume = 0;
-				} else {
-					$("#slide").find("video").get(0).volume = 1;
-				}
-				
-				$("#slide").find("video").get(0).play();
+				fix_js_styling(slide_duration);
 			}
-			fix_js_styling(slide_duration);
-
 			// debug info
 			notimportant_length = (slide_arr)?slide_arr.length:0;
 			important_length = (important_arr)?important_arr.length:0;
@@ -402,10 +404,10 @@
 		else if ($.browser.safari)
 			browser = "safari-" + $.browser.version;
 
-		data = {action: 'infotv_count', unique: $.cookie('infotv_unique'), plats: $("#place").html(), browser: browser, date: DateString(new Date()) };
+		data = {action: 'infotv_count', unique: $.cookie('infotv_unique'), plats: $("#place").html(), browser: browser, screensize: $("#slide").width() + "x" + $("#slide").height(), date: DateString(new Date()) };
 		$.post(infotv_data.admin_ajax_url, data, function(data, textStatus, jqXHR ){
-				$("#debug .ajax").html(textStatus + " " + data); 
-				});
+			$("#debug .ajax").html(textStatus + " " + data); 
+		});
 	}
     function play() {
 		clearTimeout(slide_t);

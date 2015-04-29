@@ -538,20 +538,20 @@ function infotv_options_do_page() {
 			<?php $options = get_option('infotv'); ?>
 	
 			<div class="wrap"><div id="icon-tools" class="icon32"></div>
-			<h2>Vilka har anslutit?</h2><table cellspacing=4 style="margin-top:24px;border: 1px solid gray;">
+			<h2>Vilka har anslutit?</h2><table style="margin-top:24px;border: 1px solid gray; border-spacing:10px;">
 			<tr>
-				<td><b>key</b></td>
+				<td style='display:none'><b>key</b></td>
 				<td><b>plats</b></td>
-				<td><b>ip</b></td>
+				<td><b>skärmstorlek</b></td>
 				<td><b>webbläsare</b></td>
 				<td><b>datum</b></td>
 				<td><b>uppdateringar</b></td>
 			</tr>
 			<?php if (!empty($options["count"])) 
 			foreach ($options["count"] as $key => $arr) {
-				echo "<tr><td>" . $key . "</td>".
+				echo "<tr><td style='display:none'>" . $key . "</td>".
 				"<td>" . $arr["plats"] . "</td>".
-				"<td><a href='" . $arr["remote_addr"] . "'>" . $arr["remote_addr"] . "</a></td>".
+				"<td>" . $arr["screensize"] . "</td>".
 				"<td>" . $arr["browser"] . "</td>".
 				"<td>" . $arr["date"] . "</td>".
 				"<td>" . $arr["count"] . "</td>".
@@ -576,9 +576,9 @@ function infotv_count_func(){
 	$key = $_REQUEST["unique"];
 
 	if ($count[$key] != "")
-		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "ip" => $_REQUEST['ip'], "remote_addr" => $_SERVER['REMOTE_ADDR'], "date" => $_REQUEST["date"], "count" => ++$count[$key]["count"]);
+		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "screensize" => $_REQUEST['screensize'], "date" => $_REQUEST["date"], "count" => ++$count[$key]["count"]);
 	else
-		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "ip" => $_REQUEST['ip'], "remote_addr" => $_SERVER['REMOTE_ADDR'], "date" => $_REQUEST["date"], "count" => 1);
+		$count[$key] = Array("plats" => $_REQUEST["plats"], "browser" => $_REQUEST["browser"], "screensize" => $_REQUEST['screensize'], "date" => $_REQUEST["date"], "count" => 1);
 	
 	$options["count"] = $count;
 	update_option("infotv",$options);
@@ -592,4 +592,13 @@ function infotv_count_func(){
 add_action('wp_ajax_infotv_count', 'infotv_count_func'); 
 add_action('wp_ajax_nopriv_infotv_count', 'infotv_count_func'); 
 	
-
+	
+add_filter('tiny_mce_before_init', 'infotv_tiny_mce_remove_unused_formats' );
+/*
+ * Modify TinyMCE editor to remove H1.
+ */
+function infotv_tiny_mce_remove_unused_formats($init) {
+	// Add block format elements you want to show in dropdown
+	$init['block_formats'] = 'Paragraph=p;Heading 2=h2;Heading 4=h4';
+	return $init;
+}
