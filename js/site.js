@@ -118,7 +118,10 @@
 				show_slide = true;
             } else if ("" === from_timestamp && "" === to_timestamp) {
 				show_slide = true;
-            }
+            } 
+			if ($(slide).find(".slide_text:contains('Inget planerat idag.')").length > 0) {
+				show_slide = false;
+			}
 			// set slide duration
 			slide_duration = $(slide).find(".slide_duration").html() * 1000;
 			if (isNaN(slide_duration) || slide_duration === 0) {

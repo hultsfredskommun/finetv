@@ -478,7 +478,9 @@ function sql_func( $atts ){
 	
 	// do the search
 	$count = 1;
+	$query = str_replace(array(";","[","]","{","}"),"",$query);
 	$result = mssql_query($query);
+	
 	if (!$result || mssql_num_rows($result) == 0) {
 		$retValue .= $noresults;
 	}
