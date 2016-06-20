@@ -237,7 +237,7 @@ function my_edit_slide_columns( $columns ) {
     'cb' => '<input type="checkbox" />',
     'title' => __( 'Namn' ),
     'place' => __( 'Skärm' ),
-    'from' => __('Visas från'),
+    'from' => __('Visas från'), // TODO
     'to' => __('Visas till'),
     'date' => __( 'Datum' )
   );
@@ -265,7 +265,7 @@ function my_manage_slide_columns( $column, $post_id ) {
 /* If displaying the 'annr' column. */
     
     /* If displaying the 'raanr' column. */
-    case 'from' :
+    case 'from' : // TODO
 
 		/* Get the post meta. */
 	  	$from = get_post_meta( $post_id, 'from', true );
@@ -276,7 +276,7 @@ function my_manage_slide_columns( $column, $post_id ) {
 			echo Date("Y-m-d H:i",$from);
 		break;
 
-	case 'to' :
+	case 'to' : // TODO
 
 		$to = get_post_meta( $post_id, 'to', true );
 	  
@@ -328,8 +328,8 @@ add_filter( 'manage_edit-slide_sortable_columns', 'my_slide_sortable_columns' );
 
 function my_slide_sortable_columns( $columns ) {
 
-  $columns['to'] = 'to';
-  $columns['from'] = 'from';
+  $columns['to'] = 'to'; // TODO
+  $columns['from'] = 'from'; // TODO
 
   return $columns;
 }

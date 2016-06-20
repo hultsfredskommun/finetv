@@ -48,8 +48,12 @@ define('DONOTCACHCEOBJECT', true);
 		$footer_text = get_field("footer_text");
 		$footer_background_color =  get_field('footer_background_color');
 		$footer_text_color = get_field('footer_text_color');
-		$blank_screen_from = get_field('blank_screen_from');
-		$blank_screen_to = get_field('blank_screen_to');
+		// REPLACED WITH start_blank_field
+		//$blank_screen_from = get_field('blank_screen_from');
+		$blank_screen_from = get_field('start_blank_skarm');
+		// REPLACED WITH stop_blank_field
+		//$blank_screen_to = get_field('blank_screen_to');
+		$blank_screen_to = get_field('stop_blank_skarm');
 		$screen_font_scale = get_field('screen_font_scale');
 		$screen_background_color = get_field('screen_background_color');
 		$screen_text_color = get_field('screen_text_color');

@@ -283,4 +283,64 @@ if(function_exists("register_field_group"))
 		'menu_order' => 2,
 	));
 }
+
+if( function_exists('acf_add_local_field_group') ):
+
+acf_add_local_field_group(array (
+	'key' => 'group_5768322e07e9d',
+	'title' => 'Inställningssidor',
+	'fields' => array (
+		array (
+			'key' => 'field_57683323fd359',
+			'label' => 'Start blank skärm',
+			'name' => 'start_blank_skarm',
+			'type' => 'time_picker',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'display_format' => 'H:i',
+			'return_format' => 'H:i',
+		),
+		array (
+			'key' => 'field_576839a5bf878',
+			'label' => 'Stop blank skärm',
+			'name' => 'stop_blank_skarm',
+			'type' => 'time_picker',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'display_format' => 'H:i',
+			'return_format' => 'H:i',
+		),
+	),
+	'location' => array (
+		array (
+			array (
+				'param' => 'post_type',
+				'operator' => '==',
+				'value' => 'slide_settings',
+			),
+		),
+	),
+	'menu_order' => 0,
+	'position' => 'normal',
+	'style' => 'default',
+	'label_placement' => 'top',
+	'instruction_placement' => 'label',
+	'hide_on_screen' => '',
+	'active' => 1,
+	'description' => '',
+));
+
+endif;
 ?>
