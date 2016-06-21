@@ -237,7 +237,7 @@ function my_edit_slide_columns( $columns ) {
     'cb' => '<input type="checkbox" />',
     'title' => __( 'Namn' ),
     'place' => __( 'Skärm' ),
-    'from' => __('Visas från'), // TODO
+    'from' => __('Visas från'),
     'to' => __('Visas till'),
     'date' => __( 'Datum' )
   );
@@ -265,25 +265,28 @@ function my_manage_slide_columns( $column, $post_id ) {
 /* If displaying the 'annr' column. */
     
     /* If displaying the 'raanr' column. */
-    case 'from' : // TODO
+    case 'from' :
 
 		/* Get the post meta. */
-	  	$from = get_post_meta( $post_id, 'from', true );
+	  	//$from = get_post_meta( $post_id, 'from', true );
+		$from = infotv_get_field_date( 'from', $post_id );
 		
 		if ( empty( $from ) )
 			echo __( '-' );
 		else
-			echo Date("Y-m-d H:i",$from);
+			echo $from;
 		break;
 
-	case 'to' : // TODO
+	case 'to' :
 
-		$to = get_post_meta( $post_id, 'to', true );
+		/* Get the post meta. */
+	  	//$to = get_post_meta( $post_id, 'to', true );
+		$to = infotv_get_field_date( 'to', $post_id );
 	  
 		if ( empty( $to ) )
 			echo __( '-' );
 		else
-			echo Date("Y-m-d H:i",$to);
+			echo $to;
 
 		break;
 
@@ -328,8 +331,8 @@ add_filter( 'manage_edit-slide_sortable_columns', 'my_slide_sortable_columns' );
 
 function my_slide_sortable_columns( $columns ) {
 
-  $columns['to'] = 'to'; // TODO
-  $columns['from'] = 'from'; // TODO
+  $columns['to'] = 'to'; 
+  $columns['from'] = 'from';
 
   return $columns;
 }
@@ -603,4 +606,15 @@ function infotv_tiny_mce_remove_unused_formats($init) {
 	// Add block format elements you want to show in dropdown
 	$init['block_formats'] = 'Paragraph=p;Heading 2=h2;Heading 4=h4';
 	return $init;
+}
+
+/* helper function to handle compability when ACF date picker change 20160621 
+   field from was replaced with from2 and to with to2 */
+function infotv_get_field_date($field,$post_id) {
+	$slide_from = get_field($field.'2',$post_id);
+	if (empty($slide_from)) {
+		$slide_from = get_post_meta( $post_id, $field, true );
+		$slide_from = Date("Y-m-d H:i",$slide_from);
+	}
+	return $slide_from;
 }

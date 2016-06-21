@@ -77,6 +77,7 @@ if(function_exists("register_field_group"))
 				'type' => 'color_picker',
 				'default_value' => '#000000',
 			),
+			/*
 			array (
 				'key' => 'field_51dd142ccae2f',
 				'label' => 'Blank skärm från',
@@ -102,7 +103,7 @@ if(function_exists("register_field_group"))
 				'picker' => 'slider',
 				'save_as_timestamp' => 'true',
 				'get_as_timestamp' => 'false',
-			),
+			),*/
 			array (
 				'key' => 'field_51dd380128125',
 				'label' => 'Textskalning',
@@ -153,7 +154,7 @@ if(function_exists("register_field_group"))
 		),
 		'options' => array (
 			'position' => 'normal',
-			'layout' => 'default',
+			'layout' => 'box',
 			'hide_on_screen' => array (
 				0 => 'the_content',
 				1 => 'excerpt',
@@ -167,8 +168,10 @@ if(function_exists("register_field_group"))
 				9 => 'send-trackbacks',
 			),
 		),
-		'menu_order' => 0,
+		'menu_order' => 6,
 	));
+	
+	
 	register_field_group(array (
 		'id' => 'acf_presentation',
 		'title' => 'Presentation',
@@ -217,7 +220,7 @@ if(function_exists("register_field_group"))
 				'name' => 'slide_background_color',
 				'type' => 'color_picker',
 				'default_value' => '',
-			),
+			),/*
 			array (
 				'key' => 'field_5211cbf8b591e',
 				'label' => 'Från',
@@ -245,7 +248,7 @@ if(function_exists("register_field_group"))
 				'picker' => 'slider',
 				'save_as_timestamp' => 'true',
 				'get_as_timestamp' => 'false',
-			),
+			),*/
 			array (
 				'key' => 'field_521d973527086',
 				'label' => 'Viktig sida',
@@ -269,7 +272,7 @@ if(function_exists("register_field_group"))
 		),
 		'options' => array (
 			'position' => 'normal',
-			'layout' => 'no_box',
+			'layout' => 'box',
 			'hide_on_screen' => array (
 				0 => 'excerpt',
 				1 => 'custom_fields',
@@ -284,11 +287,75 @@ if(function_exists("register_field_group"))
 	));
 }
 
+
+/* New to and from date on slide */
 if( function_exists('acf_add_local_field_group') ):
 
 acf_add_local_field_group(array (
+	'key' => 'group_57683de367325',
+	'title' => 'Datuminställningar',
+	'fields' => array (
+		array (
+			'key' => 'field_57683edc2914f',
+			'label' => 'Från',
+			'name' => 'from2',
+			'type' => 'date_time_picker',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'display_format' => 'Y-m-d H:i',
+			'return_format' => 'Y-m-d H:i',
+			'first_day' => 1,
+		),
+		array (
+			'key' => 'field_67683edc2914f',
+			'label' => 'Till',
+			'name' => 'to2',
+			'type' => 'date_time_picker',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'display_format' => 'Y-m-d H:i',
+			'return_format' => 'Y-m-d H:i',
+			'first_day' => 1,
+		),
+	),
+	'location' => array (
+		array (
+			array (
+				'param' => 'post_type',
+				'operator' => '==',
+				'value' => 'slide',
+			),
+		),
+	),
+	'menu_order' => 0,
+	'position' => 'normal',
+	'style' => 'default',
+	'label_placement' => 'top',
+	'instruction_placement' => 'label',
+	'hide_on_screen' => '',
+	'active' => 1,
+	'description' => '',
+));
+endif;
+
+
+/* new blank_screen settings */
+if( function_exists('acf_add_local_field_group') ):
+acf_add_local_field_group(array (
 	'key' => 'group_5768322e07e9d',
-	'title' => 'Inställningssidor',
+	'title' => 'Inställningar för skärmen',
 	'fields' => array (
 		array (
 			'key' => 'field_57683323fd359',
@@ -306,6 +373,7 @@ acf_add_local_field_group(array (
 			'display_format' => 'H:i',
 			'return_format' => 'H:i',
 		),
+
 		array (
 			'key' => 'field_576839a5bf878',
 			'label' => 'Stop blank skärm',
@@ -341,6 +409,5 @@ acf_add_local_field_group(array (
 	'active' => 1,
 	'description' => '',
 ));
-
 endif;
 ?>
