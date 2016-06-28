@@ -618,3 +618,54 @@ function infotv_get_field_date($field,$post_id) {
 	}
 	return $slide_from;
 }
+
+
+/* Register meta box. */
+function infotv_register_meta_boxes() {
+    add_meta_box( 'meta-box-id', 'Gammal tidsinställning', 'infotv_display_date_callback', null, 'normal', 'high' );
+}
+add_action( 'add_meta_boxes', 'infotv_register_meta_boxes' );
+ 
+/**
+ * Meta box display callback.
+ *
+ * @param WP_Post $post Current post object.
+ */
+function infotv_display_date_callback( $post ) {
+    // Display code/markup goes here. Don't forget to include nonces!
+	
+	$gammal = $ny = "";
+	$field = "from";
+	$slide_from = get_field($field.'2',$post->ID);
+	if (empty($slide_from)) {
+		$slide_from = get_post_meta( $post->ID, $field, true );
+		$slide_from = Date("Y-m-d H:i",$slide_from);
+		if (!empty($slide_from)) {
+			$gammal .= "Du har en satt en från-tid med gamla tidsinställningen: <b>" . $slide_from . "</b>.<br>\n";
+		}
+	}
+	else {
+		$ny .= "Du har en satt en från-tid med nya tidsinställningen nedan.<br>\n";
+	}
+	
+	$field = "to";
+	$slide_to = get_field($field.'2',$post->ID);
+	if (empty($slide_to)) {
+		$slide_to = get_post_meta( $post->ID, $field, true );
+		$slide_to = Date("Y-m-d H:i",$slide_to);
+		if (!empty($slide_to)) {
+			$gammal .= "Du har en satt en till-tid med gamla tidsinställningen: <b>" . $slide_to . "</b>.<br>\n";
+		}
+	}
+	else {
+		$ny .= "Du har en satt en till-tid med nya tidsinställningen nedan.<br>\n";
+	}
+
+	if (empty($gammal)) {
+		//echo "$ny<br>\n";
+		echo "Det är nu en ny version av tidsinställning. Se Datuminställningar nedan. Gamla inställningar fungerar fortfarande och visas här när det finns någon sådan satt.<br>\n";
+	}
+	else {
+		echo "Det är nu en ny version av tidsinställning. Inställningar som gjordes tidigare fungerar fortfarande men syns inte i rätt i inställningarna nedan. <br>\n<br>\n$gammal<br>\nNär du sätter tid med den nya inställningen så försvinner automatiskt det gamla som är satt.<br>\n";
+	}
+}
