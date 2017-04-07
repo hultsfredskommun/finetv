@@ -2,7 +2,7 @@
 Theme Name: 	Infotv
 Theme URI: 		https://github.com/hultsfredskommun/infotv
 Description: 	Infotv for presenting slides on a monitor (based on a finetv made by Johan Furuskog @furuskog)
-Version: 		0.3.2
+Version: 		0.3.3
 Author: 		Jonas Hjalmarsson
 Author URI: 	http://www.hultsfred.se
 Tags: 			TV, information, slides, clean, basic
@@ -76,6 +76,14 @@ html {
 	font-size: 250%; 
 	font-family: Arial; }
 html, body, #slide { overflow: hidden; }
+
+ul {
+	margin-left: inherit;
+}
+
+li { 
+	list-style-type: initial;
+}
 
 #primary {
 	z-index: 900;
