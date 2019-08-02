@@ -1,9 +1,3 @@
-<html><head>
-<title><?php echo $place; ?> InfoTV</title>
-<?php 
-	wp_head();
-?>
-</head><body <?php post_class(is_home()?"home":""); ?>>
 <?php 
 if (isset($_REQUEST["reset"])) {
 	setcookie( "infotv_redirect", "$place", time() - 60*60, "/"); 
@@ -12,6 +6,14 @@ if (isset($_REQUEST["always"])) {
 	$place = get_term_link($place, 'place' );
 	setcookie( "infotv_redirect", "$place", time() + (10 * 365 * 24 * 60 * 60), "/"); 
 }
+?>
+<html><head>
+<title><?php echo $place; ?> InfoTV</title>
+<?php
+	wp_head();
+?>
+</head><body <?php post_class(is_home()?"home":""); ?>>
+<?php 
  ?>
 <div id="tools" class="hidden">
 	<div>Förhandsgranska:</div>

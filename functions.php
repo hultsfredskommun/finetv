@@ -77,7 +77,7 @@
 		wp_enqueue_script( 'site' );
 		$data = array(
 			'site_url' => site_url(),
-			'admin_ajax_url' => str_replace("https://","http://",admin_url('admin-ajax.php')));
+			'admin_ajax_url' => admin_url('admin-ajax.php'));
 		wp_localize_script('site', 'infotv_data', $data);
 
 		wp_register_style( 'screen', get_template_directory_uri().'/style.css', '', '', 'screen' );
@@ -613,7 +613,7 @@ function infotv_tiny_mce_remove_unused_formats($init) {
 function infotv_get_field_date($field,$post_id) {
 	$slide_from = get_field($field.'2',$post_id);
 	if (empty($slide_from)) {
-		$slide_from = get_post_meta( $post_id, $field, true );
+		$slide_from = intval(get_post_meta( $post_id, $field, true ));
 		$slide_from = Date("Y-m-d H:i",$slide_from);
 	}
 	return $slide_from;

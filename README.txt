@@ -25,5 +25,6 @@
 	Blank screen from and Bland screen to has been updated in the settings page 'Inställningssidor'. Settings has to be set again!
 	//UPDATE VERSION 0.3.1
 	New functionality for from and to field at a slide. Back compability with already set dates. But new fields created for newly set dates.
-	
+	//UPDATE VERSION 0.4
+	Javascript changes to fix bugs when checking if slide is shown or not. Some error handling is added.
 	- - - - - - - - - - - - - - - - - - - - - - -

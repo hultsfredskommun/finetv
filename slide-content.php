@@ -21,8 +21,8 @@
 	$slide_important = get_field('slide_important',$post_id);
 	$importantclass = ($slide_important)?" important":" notimportant";
 ?>
-	
-	<div data-id="<?php echo $post_id; ?>" class="<?php echo $post_id . $importantclass; ?> slide-item">
+	<?php if ($from_timestamp >= strtotime("now") || empty($from_timestamp) ) : ?>	
+	<div data-now="<?php echo strtotime("now"); ?>" data-from="<?php echo $to_timestamp . " - " . $slide_to; ?>" data-id="<?php echo $post_id; ?>" class="<?php echo $post_id . $importantclass; ?> slide-item">
 		<?php 
 		
 		echo get_image(get_post_thumbnail_id(),$slide_image_mode); ?>
@@ -33,4 +33,5 @@
 		<div class="hidden slide_to" timestamp="<?php echo $to_timestamp; ?>"><?php echo $slide_to; ?></div>
 		<div class="hidden slide_from" timestamp="<?php echo $from_timestamp; ?>"><?php echo $slide_from; ?></div>
 	</div>
-<?php //endif; ?>
+<?php endif;
+ //endif; ?>

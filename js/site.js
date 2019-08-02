@@ -1,5 +1,7 @@
+
+
 (function ($) {
-	var slide_duration, to_timestamp = "", from_timestamp = "", show_slide, the_slide, the_arr, slide, important_arr, slide_arr, active_slide = -1, active_important_slide = -1, slide_count = 0, update_count = 0, blank_screen_from = "", blank_screen_to = "", show_important = true, slide_t, update_t;
+	var slide_duration, to_timestamp = "", from_timestamp = "", show_slide, the_slide, the_arr, slide, important_arr, slide_arr, active_slide = -1, active_important_slide = -1, slide_count = 0, update_count = 0, blank_screen_from = "", blank_screen_to = "", show_important = true, slide_t, update_t, next_slide_count = 0;
 
 	
 	function DateString(d) {
@@ -101,24 +103,24 @@
 
 		if (slide) {
 			// set current time and slide time
-            now_time = TimeString(new Date());
+			now_time = TimeString(new Date());
 			now_timestamp = Math.round(new Date() / 1000);
 			
-			to_timestamp = $(slide).find(".slide_to").attr("timestamp");
-			from_timestamp = $(slide).find(".slide_from").attr("timestamp");
+			to_timestamp = parseInt($(slide).find(".slide_to").attr("timestamp"));
+			from_timestamp = parseInt($(slide).find(".slide_from").attr("timestamp"));
 			
 			
 			// check if valid time
 			show_slide = false;
-			if (now_timestamp > from_timestamp && "" === to_timestamp) {
+			if (now_timestamp > from_timestamp && 0 === to_timestamp) {
 				show_slide = true;
-            } else if ("" === from_timestamp && now_timestamp < to_timestamp) {
+			} else if (0 === from_timestamp && now_timestamp < to_timestamp) {
 				show_slide = true;
-            } else if (now_timestamp > from_timestamp && now_timestamp < to_timestamp) {
+			} else if (now_timestamp > from_timestamp && now_timestamp < to_timestamp) {
 				show_slide = true;
-            } else if ("" === from_timestamp && "" === to_timestamp) {
+			} else if (0 === from_timestamp && 0 === to_timestamp) {
 				show_slide = true;
-            } 
+			} 
 			if ($(slide).find(".slide_text:contains('Inget planerat idag.')").length > 0) {
 				show_slide = false;
 			}
@@ -126,22 +128,33 @@
 			slide_duration = $(slide).find(".slide_duration").html() * 1000;
 			if (isNaN(slide_duration) || slide_duration === 0) {
 				slide_duration = 10000;
-            }
+			}
 			
 			// check if toggle show_important
-            // toggle if all important has been shown
+			// toggle if all important has been shown
 			if (show_important && active_important_slide === important_arr.length - 1) {
 				show_important = !show_important; 
-                active_important_slide = -1;
-            } else if (show_slide && !show_important) {
+				active_important_slide = -1;
+			} else if (show_slide && !show_important) {
 				show_important = !show_important; 
 			}
 			
 			// do slide again if not showing this slide
+			if (next_slide_count > 200) {
+				next_slide_count=0;
+				clearTimeout(slide_t);
+				setTimeout(do_update, 5000); // wait 5s and update again
+				slide_t = setTimeout(do_slide, 10000); // wait 10s and show slide again
+				$("#slide").html("Error, 200 invalid slides. Trying again in 10 seconds.");
+				return;
+			}
 			if (!show_slide) {
+				next_slide_count++;
 				do_slide(add);
 				return;
 			}
+			next_slide_count=0;
+			
 
 			// count actual slides shown
 			slide_count++;
@@ -183,9 +196,9 @@
 			"now: " + now_time + "<br>" +
 			"blank_screen_from: " + blank_screen_from + "<br>" +
 			"blank_screen_to: " + blank_screen_to + "<br>" +
-			"from: " + from_timestamp + "<br>" +
-			"now: " + now_timestamp + "<br>" +
-			"to: " + to_timestamp + "<br>" +
+			"from: " + printDate(from_timestamp) + "<br>" +
+			"now: " + printDate(now_timestamp) + "<br>" +
+			"to: " + printDate(to_timestamp) + "<br>" +
 			"from: " + $("#slide .slide_from").html() + "<br>" +
 			"now: " + now_time + "<br>" +
 			"to: " + $("#slide .slide_to").html() + "<br>" +
@@ -212,7 +225,18 @@
 		}
 	}
 	
-	
+	function printDate(d) {
+		var dd = new Date(d*1000);
+		var year = "0" + dd.getYear();
+		var month = "0" + dd.getMonth();
+		var date = "0" + dd.getDate();
+		var hours = "0" + dd.getHours();
+		var minutes = "0" + dd.getMinutes();
+		var seconds = "0" + dd.getSeconds();
+
+		// Will display time in 10:30:23 format
+		return year.substr(-2) + '-' + month.substr(-2) + '-' + date.substr(-2) + " " + hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+	}
 	
 	function do_update() {
 		$("#progressbar").show().addClass("update");
