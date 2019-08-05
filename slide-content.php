@@ -22,7 +22,7 @@
 	$importantclass = ($slide_important)?" important":" notimportant";
 ?>
 	<?php if ($from_timestamp >= strtotime("now") || empty($from_timestamp) ) : ?>	
-	<div data-now="<?php echo strtotime("now"); ?>" data-from="<?php echo $to_timestamp . " - " . $slide_to; ?>" data-id="<?php echo $post_id; ?>" class="<?php echo $post_id . $importantclass; ?> slide-item">
+	<div data-id="<?php echo $post_id; ?>" class="<?php echo $post_id . $importantclass; ?> slide-item">
 		<?php 
 		
 		echo get_image(get_post_thumbnail_id(),$slide_image_mode); ?>
