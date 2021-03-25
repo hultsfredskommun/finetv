@@ -1,6 +1,7 @@
 <?php
 	$post_id = $post->ID;
 
+
 	$from_timestamp = $to_timestamp = "";
 	
 	
@@ -20,8 +21,8 @@
 	}
 	$slide_important = get_field('slide_important',$post_id);
 	$importantclass = ($slide_important)?" important":" notimportant";
-?>
-	<?php if ($from_timestamp >= strtotime("now") || empty($from_timestamp) ) : ?>	
+
+    if ($from_timestamp <= strtotime("now") || empty($from_timestamp) ) : ?>	
 	<div data-id="<?php echo $post_id; ?>" class="<?php echo $post_id . $importantclass; ?> slide-item">
 		<?php 
 		

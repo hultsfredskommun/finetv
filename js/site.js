@@ -3,7 +3,7 @@
 (function ($) {
 	var slide_duration, to_timestamp = "", from_timestamp = "", show_slide, the_slide, the_arr, slide, important_arr, slide_arr, active_slide = -1, active_important_slide = -1, slide_count = 0, update_count = 0, blank_screen_from = "", blank_screen_to = "", show_important = true, slide_t, update_t, next_slide_count = 0;
 
-	
+
 	function DateString(d) {
 		function pad(n) { return n < 10 ? '0' + n : n; }
 		return d.getUTCFullYear() + '-'
@@ -23,20 +23,20 @@
 
 		// stop previous video
 		$("#slide").find("video").stop();
-		
+
 		// set clock
 		var now_time = TimeString(new Date()), now_timestamp = Math.round(new Date() / 1000);
 		$("#clock").toggle($("#source .settings .clock").html() === "1").html(now_time);
 
 		// halt if pause
 		if ($("#progressbar").hasClass("pause")) { return; }
-		
+
 		// hide cursor
 		$("html").css("cursor", "none");
-			
+
 		// set default add one step forward
 		if (typeof add === 'undefined') { add = 1; }
-			
+
 		// do blank
 		if (blank_screen_from < now_time || blank_screen_to > now_time) {
 			if ($("#black").hasClass("hidden")) {
@@ -47,7 +47,7 @@
 				$("#black").addClass("hidden");
             }
 		}
-		
+
 		// show progressbar
 		if (!$("#progressbar").hasClass("update")) {
 			$("#progressbar").show();
@@ -58,14 +58,14 @@
 			slide_t = setTimeout(do_slide, 1000); // wait 10s and try again
 			return;
 		}
-		
-		
+
+
 		if (important_arr === undefined || important_arr.length === 0) {
 			show_important = false;
         } else if (slide_arr === undefined || slide_arr.length === 0) {
 			show_important = true;
         }
-		
+
 		// get next slide
 		if (show_important) {
 			active_important_slide += add;
@@ -76,9 +76,9 @@
 			the_slide = active_slide;
 			the_arr = slide_arr;
 		}
-		
+
 		slide = the_arr[the_slide];
-		
+
 		// check if active slide exist
 		if (slide === undefined) {
 			if (the_slide === 0) {
@@ -105,11 +105,11 @@
 			// set current time and slide time
 			now_time = TimeString(new Date());
 			now_timestamp = Math.round(new Date() / 1000);
-			
+
 			to_timestamp = parseInt($(slide).find(".slide_to").attr("timestamp"));
 			from_timestamp = parseInt($(slide).find(".slide_from").attr("timestamp"));
-			
-			
+
+
 			// check if valid time
 			show_slide = false;
 			if (now_timestamp > from_timestamp && 0 === to_timestamp) {
@@ -120,7 +120,7 @@
 				show_slide = true;
 			} else if (0 === from_timestamp && 0 === to_timestamp) {
 				show_slide = true;
-			} 
+			}
 			if ($(slide).find(".slide_text:contains('Inget planerat idag.')").length > 0) {
 				show_slide = false;
 			}
@@ -129,23 +129,23 @@
 			if (isNaN(slide_duration) || slide_duration === 0) {
 				slide_duration = 10000;
 			}
-			
+
 			// check if toggle show_important
 			// toggle if all important has been shown
 			if (show_important && active_important_slide === important_arr.length - 1) {
-				show_important = !show_important; 
+				show_important = !show_important;
 				active_important_slide = -1;
 			} else if (show_slide && !show_important) {
-				show_important = !show_important; 
+				show_important = !show_important;
 			}
-			
+
 			// do slide again if not showing this slide
 			if (next_slide_count > 200) {
 				next_slide_count=0;
 				clearTimeout(slide_t);
 				setTimeout(do_update, 5000); // wait 5s and update again
 				slide_t = setTimeout(do_slide, 10000); // wait 10s and show slide again
-				$("#slide").html("Error, 200 invalid slides. Trying again in 10 seconds.");
+				$("#slide").html("Ingen information finns att visa...");
 				return;
 			}
 			if (!show_slide) {
@@ -154,7 +154,7 @@
 				return;
 			}
 			next_slide_count=0;
-			
+
 
 			// count actual slides shown
 			slide_count++;
@@ -162,9 +162,18 @@
 
 			// NOW make the switch to the new active slide
 			//$("#slide").hide();
-			if ($("#slide").attr("data-id") != $(slide).attr("data-id")) {	
+			if ($("#slide").attr("data-id") != $(slide).attr("data-id")) {
 				$("#slide").html($(slide).html());
 				$("#slide").attr("data-id",$(slide).attr("data-id"));
+
+				// special page 10156
+				if ($("#slide").attr("data-id") == '10156' || $("#slide").attr("data-id") == '10197') {
+					$("#frame").hide();
+				}
+				else {
+					$("#frame").show();
+				}
+
 				//$("#slide").show();
 				// start video if present
 				if ($("#slide").find("video").length > 0) {
@@ -178,7 +187,7 @@
 					} else {
 						$("#slide").find("video").get(0).volume = 1;
 					}
-					
+
 					$("#slide").find("video").get(0).play();
 				}
 				fix_js_styling(slide_duration);
@@ -189,7 +198,7 @@
 			$("#debug .slide").html("screen size: " + $("#slide").width() + "x" +$("#slide").height() + "<br>" +
 			"slide_duration: " + slide_duration + "<br>" +
 			"slide_count: " + slide_count + "<br>" +
-			"active_slide: " + active_slide + "<br>" +
+			"active_slide: " + active_slide + " (" + $("#slide").attr("data-id") + ")<br>" +
 			"active_important_slide: " + active_important_slide + "<br>" +
 			"not important slides: " + notimportant_length + "<br>" +
 			"important slides: " + important_length + "<br>" +
@@ -205,15 +214,15 @@
 			"show_slide: " + show_slide + "<br>" +
 			"next slide important: " + show_important + "<br>"
 			);
-			
-		
+
+
 			// wait for next slide
 			clearTimeout(slide_t);
 			if (!$("#progressbar").hasClass("update"))
 				$("#progressbar").fadeOut("slow");
 			slide_t=setTimeout(do_slide,slide_duration);
-		
-			
+
+
 		}
 		else {
 			$("#slide").html("<div class='content'>Ingen information att visa just nu.</div>");
@@ -224,7 +233,7 @@
 			slide_t=setTimeout(do_slide,10000);
 		}
 	}
-	
+
 	function printDate(d) {
 		var dd = new Date(d*1000);
 		var year = "0" + dd.getYear();
@@ -237,12 +246,12 @@
 		// Will display time in 10:30:23 format
 		return year.substr(-2) + '-' + month.substr(-2) + '-' + date.substr(-2) + " " + hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
 	}
-	
+
 	function do_update() {
 		$("#progressbar").show().addClass("update");
 
 		update_count++;
-		
+
 		// Get new slide-items
 		$.get(document.URL, function(data) {
 			newsource = $(data);
@@ -263,7 +272,7 @@
 
 				// set new settings
 				set_settings();
-				
+
 				/* preload images */
 				$("#source").find("img").each( function() {
 					console.log('loading image ' + $(this).attr("src"));
@@ -279,7 +288,7 @@
 				/* preload video */
 				/*$("#source").find("video").each( function() {
 					console.log('loading video ' + $(this).find("source").attr("src"));
-					
+
 					$.get($(this).attr("src"),null,function() {
 						console.log('video loaded?');
 					}).done(function() {
@@ -301,36 +310,36 @@
 						$(".newvideo").remove();
 					});
 				});*/
-				
+
 			}
-				
+
 			$("#debug .update").html("update_count: " + update_count + "<br>slide-items: " + (newcount - 1) + "<br>Updated " + DateString(new Date()));
-			
+
 			$("#progressbar").fadeOut("slow",function() { $(this).removeClass("update"); });
-			
+
 			doCount();
-		}).error(function() { 
+		}).error(function() {
 			$("#debug .update").html("Error fetching data. Try again.");
 			clearTimeout(update_t);
 			update_t=setTimeout(do_update,60000);
-			
+
 		});
 
-		
+
 		$("#debug .update").html("update_count: " + update_count + "<br>"
 		);
-		
+
 		clearTimeout(update_t);
 		update_t=setTimeout(do_update,60000);
-	
+
 	}
 
-	
-	
+
+
 	function fix_js_styling(slide_duration) {
-	
+
 		if (slide_duration > 4000)  slide_duration -= 2000;
-	
+
 		// fill image
 		screen_ratio = $("#slide").height() / $("#slide").width();
 		img_ratio = $("#slide .slide_image img").height() / $("#slide .slide_image img").width();
@@ -349,7 +358,7 @@
 			}
 		}
 
-		
+
 		footerheight = 0;
 		if ($("#footer").is(":visible"))
 			footerheight = $("#footer").height();
@@ -359,7 +368,7 @@
 			$("#slide .slide_image").css("margin-top", ($("#slide").height() - footerheight - $("#slide .slide_image img").height()) / 2 + "px");
 		else
 			$("#slide .slide_image").css("margin-top", "0px");
-		
+
 		// vertical align text
 		if ($("#slide").height() - footerheight > $("#slide .content").height()) {
 			$("#slide .content").css("margin-top", ($("#slide").height() - footerheight - $("#slide .content").height()) / 2 + "px");
@@ -378,31 +387,31 @@
 			}
 		}
 
-		
+
 		if ($("#slide .slide_background_color").html() != "")
 			$("#slide").css("background-color", $("#slide .slide_background_color").html());
 		else
 			$("#slide").css("background-color", "transparent");
-			
+
 		if ($("#slide .slide_text_color").html() != "")
 			$("#slide").css("color", $("#slide .slide_text_color").html());
 		else
 			$("#slide").css("color", "inherit");
-			
-		
+
+
 	}
-	
-	
+
+
 	function set_settings() {
 		$("#frame").toggle(($("#source .settings .frame_image").html() != ""));
 		$("#frame_image").attr("src",$("#source .settings .frame_image").html());
-		
+
 		$("#header").toggle(($("#source .settings .header_logo").html() != ""));
 		$("#header_logo").attr("src",$("#source .settings .header_logo").html());
-		
+
 		$("#footer").toggle(($("#source .settings .footer_text").html() != ""));
 		$("#footer .padding").html($("#source .settings .footer_text").html());
-		
+
 		$("#footer").css("background-color", $("#source .settings .footer_background_color").html());
 		$("#footer").css("color", $("#source .settings .footer_text_color").html());
 		blank_screen_from = $("#source .settings .blank_screen_from").html();
@@ -416,8 +425,8 @@
 			$("body").css("background-color", $("#source .settings .screen_background_color").html());
 		if ($("#source .settings .screen_text_color").html() != "")
 			$("body").css("color", $("#source .settings .screen_text_color").html());
-	}				
-	
+	}
+
 	function doCount() {
 		browser = "other";
 		if ($.browser.webkit)
@@ -433,7 +442,7 @@
 
 		data = {action: 'infotv_count', unique: $.cookie('infotv_unique'), plats: $("#place").html(), browser: browser, screensize: $("#slide").width() + "x" + $("#slide").height(), date: DateString(new Date()) };
 		$.post(infotv_data.admin_ajax_url, data, function(data, textStatus, jqXHR ){
-			$("#debug .ajax").html(textStatus + " " + data); 
+			$("#debug .ajax").html(textStatus + " " + data);
 		});
 	}
     function play() {
@@ -456,7 +465,7 @@
 		if ($.cookie('infotv_redirect') !== undefined && $("body").hasClass("home")) {
 			window.location = $.cookie('infotv_redirect');
 		}
-		
+
 		// tools
 		$(".forcesize").each(function () {
 			$(this).hover(function () {
@@ -476,7 +485,7 @@
 		$(".back").click(function () { do_slide(-1); });
 		$(".force_update").click(function (ev) { do_update(); ev.preventDefault(); });
 		$(".force_reload").click(function (ev) { location.reload(true); ev.preventDefault(); });
-		
+
 		$("body").dblclick(function () {
 			if(window.name == 'info_popUp') {
 				window.close();
@@ -487,11 +496,11 @@
 			}
 		});
 		set_settings();
-		
+
 		if ($("#source").length > 0) {
 			/* HANDLE SLIDESHOW */
 			do_slide();
-			
+
 			/* UPDATE SLIDES FROM SERVER */
 			do_update();
 
@@ -502,7 +511,7 @@
 		}
 	});
 
-	
+
 	$("html").keyup(function (ev) {
 		console.log("Handler for .keyup() called." + ev.keyCode);
 		switch(ev.keyCode) {
@@ -533,9 +542,9 @@
 		$("html").css("cursor","default");
 	});
 
-	
-	
-	
+
+
+
 })(jQuery);
 
 

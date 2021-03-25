@@ -468,30 +468,30 @@ function sql_func( $atts ){
 	if ($host == "" || $user == "" || $db == "" || $pwd == "" || $query == "")
 		return $retValue . '<div class="error">Kan inte kontakta databasen utan r&auml;tt uppgifter.</div>';
 
-	if (!function_exists("mssql_connect"))
-		return $retValue . '<div class="error">Det m&aring;ste finnas mssql i PHP f&ouml;r att st&auml;lla fr&aring;gan.</div>';
+	if (!function_exists("mssqli_connect"))
+		return $retValue . '<div class="error">Fel vid inl&auml;sning fr&aring;n bokningssystem.</div>';
 	
 	// try to connect
-	$link = mssql_connect($host, $user, $pwd);
+	$link = mssqli_connect($host, $user, $pwd);
 	if (!$link) {
-		return $retValue . '<div class="error">Kunde inte kontakta databasen. Fel: ' . mssql_get_last_message() . '</div>';
+		return $retValue . '<div class="error">Kunde inte kontakta databasen. Fel: ' . mssqli_get_last_message() . '</div>';
 	}
 
-	mssql_select_db($db);
+	mssqli_select_db($db);
 	
 	// do the search
 	$count = 1;
 	$query = str_replace(array(";","[","]","{","}"),"",$query);
-	$result = mssql_query($query);
+	$result = mssqli_query($query);
 	
-	if (!$result || mssql_num_rows($result) == 0) {
+	if (!$result || mssqli_num_rows($result) == 0) {
 		$retValue .= $noresults;
 	}
 	else
 	{	
 		//echo table
 		echo "<table style='font-size: $fontsize'>";
-		while ($row = mssql_fetch_assoc($result)) {
+		while ($row = mssqli_fetch_assoc($result)) {
 			echo "<tr>";
 			foreach ($row as $key => $col) {
 				echo "<td style='padding: $padding'>" . mb_convert_encoding($col, $convertfrom, $convertto) . "</td>";
@@ -500,7 +500,7 @@ function sql_func( $atts ){
 		}
 		echo "</table>";
 	}	
-	mssql_close($link);
+	mssqli_close($link);
 	
 
 
@@ -639,7 +639,9 @@ function infotv_display_date_callback( $post ) {
 	$slide_from = get_field($field.'2',$post->ID);
 	if (empty($slide_from)) {
 		$slide_from = get_post_meta( $post->ID, $field, true );
-		$slide_from = Date("Y-m-d H:i",$slide_from);
+        if (!empty($slide_from)) {
+		  $slide_from = Date("Y-m-d H:i",$slide_from);
+        }
 		if (!empty($slide_from)) {
 			$gammal .= "Du har en satt en från-tid med gamla tidsinställningen: <b>" . $slide_from . "</b>.<br>\n";
 		}
@@ -652,7 +654,9 @@ function infotv_display_date_callback( $post ) {
 	$slide_to = get_field($field.'2',$post->ID);
 	if (empty($slide_to)) {
 		$slide_to = get_post_meta( $post->ID, $field, true );
-		$slide_to = Date("Y-m-d H:i",$slide_to);
+        if (!empty($slide_to)) {
+            $slide_to = Date("Y-m-d H:i",$slide_to);
+        }
 		if (!empty($slide_to)) {
 			$gammal .= "Du har en satt en till-tid med gamla tidsinställningen: <b>" . $slide_to . "</b>.<br>\n";
 		}
